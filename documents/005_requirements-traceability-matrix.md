@@ -96,6 +96,19 @@ This document provides complete traceability between MVP features, user personas
 - **Fixed-Income:** Email preference (FR-013) → Accessibility (NFR-009)
 - **Single Parent:** Priority alerts (FR-014) → Performance (NFR-001)
 
+### Feature 8: Subscription and Plan Management
+
+| Functional Requirement | NFR Mapping | Pre-Teen | Teen | College | Single Adult | Married Couple | Single Parent | Two Parent | Fixed-Income |
+|------------------------|-------------|----------|------|---------|--------------|----------------|---------------|------------|-------------|
+| FR-015: Plan-Based Feature Access | NFR-016, NFR-021 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| FR-016: Family Invitation System | NFR-006, NFR-011 | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✗ |
+| FR-017: Subscription Management | NFR-005, NFR-007 | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✗ |
+
+**Plan-Based Feature Trace:**
+- **Free Plans:** Core features with usage limits (FR-015) → Scalability (NFR-016)
+- **Family Plans:** Email invitations and role management (FR-016) → Authentication (NFR-006)
+- **Paid Plans:** Subscription and billing management (FR-017) → Security (NFR-005)
+
 ## 3. Non-Functional Requirements Cross-Reference
 
 ### Performance Requirements (NFR-001 to NFR-004)
@@ -128,14 +141,14 @@ This document provides complete traceability between MVP features, user personas
 
 | Persona | Functional Reqs | Non-Functional Reqs | Special Considerations | Coverage Score |
 |---------|----------------|-------------------|----------------------|----------------|
-| **Pre-Teen (8-14)** | 15/15 (100%) | 23/23 (100%) | Parent-child collaboration, parental control, manual entry only | ✅ Complete |
-| **Teen (15-17)** | 14/14 (100%) | 23/23 (100%) | Parental consent, education, gamification | ✅ Complete |
-| **College Student (18-22)** | 14/14 (100%) | 23/23 (100%) | Variable income, mobile-first, data costs | ✅ Complete |
-| **Single Adult (25-40)** | 14/14 (100%) | 23/23 (100%) | Professional interface, multi-platform | ✅ Complete |
-| **Married Couple (25-65)** | 14/14 (100%) | 23/23 (100%) | Joint access, synchronization, collaboration | ✅ Complete |
-| **Single Parent (25-45)** | 14/14 (100%) | 23/23 (100%) | Time efficiency, priority alerts, simplified flow | ✅ Complete |
-| **Two Parent Family (30-50)** | 14/14 (100%) | 23/23 (100%) | Family sharing, child categories, security | ✅ Complete |
-| **Fixed-Income (55+)** | 14/14 (100%) | 23/23 (100%) | Accessibility, large fonts, simplified interface | ✅ Complete |
+| **Pre-Teen (8-14)** | 16/17 (94%) | 23/23 (100%) | Parent-child collaboration, parental control, manual entry only, FREE plan | ✅ Complete |
+| **Teen (15-17)** | 16/17 (94%) | 23/23 (100%) | Parental consent, education, gamification, FREE plan | ✅ Complete |
+| **College Student (18-22)** | 16/17 (94%) | 23/23 (100%) | Variable income, mobile-first, data costs, FREE plan | ✅ Complete |
+| **Single Adult (25-40)** | 17/17 (100%) | 23/23 (100%) | Professional interface, multi-platform, PAID plan ($4.99/mo) | ✅ Complete |
+| **Married Couple (25-65)** | 17/17 (100%) | 23/23 (100%) | Joint access, synchronization, collaboration, PAID plan ($7.99/mo) | ✅ Complete |
+| **Single Parent (25-45)** | 17/17 (100%) | 23/23 (100%) | Time efficiency, priority alerts, PAID family plan ($9.99/mo) | ✅ Complete |
+| **Two Parent Family (30-50)** | 17/17 (100%) | 23/23 (100%) | Family sharing, child categories, PAID family plan ($9.99/mo) | ✅ Complete |
+| **Fixed-Income (55+)** | 16/17 (94%) | 23/23 (100%) | Accessibility, large fonts, simplified interface, FREE plan | ✅ Complete |
 
 ## 5. Business Rules Traceability
 
@@ -163,6 +176,21 @@ This document provides complete traceability between MVP features, user personas
 **Functional Requirements:** FR-001 (Teen-specific)  
 **Non-Functional Requirements:** NFR-006 (Authentication)  
 **Implementation:** Parental consent workflow
+
+### BR-007: Free Plan Accessibility
+**Functional Requirements:** FR-015 (Plan-Based Feature Access)  
+**Non-Functional Requirements:** NFR-016 (Scalability)  
+**Implementation:** Free tier for Pre-teen, Teen, College Student, Fixed Income
+
+### BR-008: Family Plan Authority
+**Functional Requirements:** FR-016 (Family Invitation System)  
+**Non-Functional Requirements:** NFR-006 (Authentication Security)  
+**Implementation:** Administrator role with invitation and permission management
+
+### BR-009: Plan-Based Feature Limits
+**Functional Requirements:** FR-015 (Plan-Based Feature Access), FR-017 (Subscription Management)  
+**Non-Functional Requirements:** NFR-016 (Scalability), NFR-021 (Performance Monitoring)  
+**Implementation:** Feature toggles and usage monitoring with upgrade prompts
 
 ## 6. Gap Analysis Results
 

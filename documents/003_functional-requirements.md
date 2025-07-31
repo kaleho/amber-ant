@@ -267,6 +267,61 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - Quiet hours setting
 - Emergency alert override
 
+### 2.8 Subscription and Plan Management
+
+#### FR-015: Plan-Based Feature Access
+**As a** user,  
+**I want** to access features based on my subscription plan,  
+**So that** I can use appropriate functionality for my life stage and financial capacity.
+
+**Acceptance Criteria:**
+- Plan-based feature enablement and restrictions
+- Automatic plan transitions based on age and life stage
+- Usage monitoring and limit enforcement
+- Upgrade prompts when approaching plan limits
+- Grace period for plan transitions
+
+**Plan-Specific Features:**
+- **Free Plans:** Basic features with usage limits
+- **Single Plan:** Advanced features and unlimited usage  
+- **Family Plans:** Collaborative features and multi-user access
+
+#### FR-016: Family Invitation System
+**As a** family plan subscriber,  
+**I want** to invite family members via email,  
+**So that** we can collaborate on our family's financial stewardship.
+
+**Acceptance Criteria:**
+- Email-based invitation system with secure tokens
+- Role-based invitation templates (spouse, teen, pre-teen)
+- Invitation acceptance and account linking workflow
+- Permission management based on family roles
+- Invitation revocation and member removal
+
+**Family Roles:**
+- **Administrator:** Full access and family management
+- **Spouse:** Joint financial access and collaboration
+- **Teen:** Supervised access with parental approval
+- **Pre-Teen:** Basic tracking with full parental oversight
+
+#### FR-017: Subscription Management
+**As a** paid plan subscriber,  
+**I want** to manage my subscription and billing,  
+**So that** I can control my account and payments.
+
+**Acceptance Criteria:**
+- Subscription signup and payment processing
+- Plan upgrade and downgrade functionality
+- Billing history and invoice access
+- Payment method management
+- Subscription cancellation with data retention
+
+**Plan Management Features:**
+- Monthly and annual billing options
+- Automatic plan transitions for age-based changes
+- Family member addition and removal
+- Usage monitoring and plan optimization recommendations
+
 ## 3. Business Rules
 
 ### BR-001: Tithing Priority
@@ -286,6 +341,15 @@ Users under 18 require parental consent for account linking and financial data a
 
 ### BR-006: Collaboration Priority for Young Users
 Pre-teen users must operate under full parental supervision with shared access to all financial data and approval workflows for spending decisions.
+
+### BR-007: Free Plan Accessibility
+Pre-teen, Teen, College Student, and Fixed Income users must have access to core biblical financial stewardship features at no cost to support formation and accessibility.
+
+### BR-008: Family Plan Authority
+Family plan administrators have ultimate authority over family member access, permissions, and financial data visibility within the family unit.
+
+### BR-009: Plan-Based Feature Limits
+Feature access and usage limits must be enforced based on subscription plan with clear upgrade paths for users approaching limits.
 
 ## 4. Constraints and Assumptions
 
