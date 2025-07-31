@@ -72,7 +72,7 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - Tax reporting support
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Educational focus on allowance and chore money as income; simplified 10% calculation
+- **Pre-Teen:** Focus on allowance and chore money tracking; simplified 10% calculation with parental oversight
 - **Teen:** Educational tooltips about tithing principles
 - **College Student:** Variable income pattern recognition
 - **Fixed-Income:** Social Security and benefit income support
@@ -90,24 +90,23 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - Payment reminder notifications
 - Annual giving statements
 
-#### FR-004A: Financial Education for Pre-Teens
-**As a** pre-teen user,  
-**I want** educational content about biblical financial principles,  
-**So that** I can learn sound financial stewardship from a young age.
+#### FR-004A: Parent-Child Financial Collaboration
+**As a** parent with a pre-teen child,  
+**I want** to collaborate with my child on their financial tracking,  
+**So that** I can guide their learning while they practice financial responsibility.
 
 **Acceptance Criteria:**
-- Interactive lessons on tithing, saving, and spending
-- Age-appropriate biblical stories and examples
-- Progress tracking through educational modules
-- Parental progress reports
-- Gamified learning with badges and rewards
-- Simple vocabulary and visual explanations
+- Parent-child shared access to pre-teen's financial data
+- Parental approval workflow for spending decisions
+- Simple transaction logging for allowance and chore money
+- Parent oversight of tithing and savings goals
+- Basic reporting for parent-child financial discussions
 
 **Pre-Teen Specific Features:**
-- Visual calculators for allowance and chore money
-- Storybook format for financial lessons
-- Parent-child discussion prompts
-- Achievement system for completing lessons
+- Simple allowance and chore money tracking
+- Parent-approved spending categories
+- Visual progress tracking for savings goals
+- Parent notification system for spending requests
 
 ### 2.3 Basic Budgeting Tool with Plaid Integration
 
@@ -124,7 +123,7 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - Overspending alerts
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Basic spend/save/give categories with visual aids and educational content
+- **Pre-Teen:** Basic spend/save/give categories with parental approval
 - **Teen:** Simplified categories with educational content
 - **College Student:** Academic calendar-based budgeting
 - **Married Couple:** Joint budget management
@@ -158,7 +157,7 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - Achievement notifications
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Small, achievable savings goals (toy, bike, etc.) with visual progress tracking
+- **Pre-Teen:** Small, achievable savings goals (toy, bike, etc.) with parent-supervised progress tracking
 - **Teen:** Age-appropriate savings targets
 - **College Student:** Semester-based goal setting
 - **Single Parent:** Priority-based savings allocation
@@ -192,7 +191,7 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - Quick-access tithing calculator
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Highly visual dashboard with pictures, progress bars, and celebration animations
+- **Pre-Teen:** Simple dashboard with basic progress bars and parent-shared view
 - **Teen:** Gamified progress elements
 - **College Student:** Mobile-optimized layout
 - **Fixed-Income:** Large fonts and high contrast
@@ -250,7 +249,7 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - Weekly progress summaries
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Visual celebrations with sounds and animations; parental notifications
+- **Pre-Teen:** Simple progress notifications; parental alerts for all activities
 - **Teen:** Gamified achievement notifications
 - **College Student:** Text-based notifications
 - **Fixed-Income:** Email notification preference
@@ -282,11 +281,11 @@ All financial calculations must be accurate to two decimal places with proper ro
 ### BR-004: Privacy First
 User financial data must never be shared with third parties without explicit user consent, following biblical principles of trustworthiness.
 
-### BR-005: Age Verification and Educational Focus
-Users under 18 require parental consent for account linking and financial data access. Pre-teens (8-14) are restricted to manual entry only with educational content focus.
+### BR-005: Age Verification and Parental Oversight
+Users under 18 require parental consent for account linking and financial data access. Pre-teens (8-14) are restricted to manual entry only with full parental oversight.
 
-### BR-006: Educational Priority for Young Users
-Pre-teen and teen users must receive age-appropriate financial education as the primary application focus, with practical tools as secondary features.
+### BR-006: Collaboration Priority for Young Users
+Pre-teen users must operate under full parental supervision with shared access to all financial data and approval workflows for spending decisions.
 
 ## 4. Constraints and Assumptions
 

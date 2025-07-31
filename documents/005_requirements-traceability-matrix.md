@@ -16,7 +16,7 @@ This document provides complete traceability between MVP features, user personas
 | FR-002: Transaction Categorization | NFR-015, NFR-022 | Manual | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 **Persona-Specific Trace:**
-- **Pre-Teen:** Manual entry only (FR-001) → Educational Focus (NFR-012)
+- **Pre-Teen:** Manual entry only (FR-001) → Collaboration Focus (NFR-011)
 - **Teen:** Parental consent (FR-001) → Authentication Security (NFR-006)
 - **College Student:** Variable income (FR-002) → Data Accuracy (NFR-015)
 - **Fixed-Income:** Enhanced security (FR-001) → Trust Standards (NFR-008)
@@ -27,7 +27,7 @@ This document provides complete traceability between MVP features, user personas
 |------------------------|-------------|----------|------|---------|--------------|----------------|---------------|------------|-------------|
 | FR-003: Tithe Calculation | NFR-015, NFR-008 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | FR-004: Tithe Payment Tracking | NFR-015, NFR-005 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| FR-004A: Financial Education | NFR-011, NFR-012 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| FR-004A: Parent-Child Collaboration | NFR-006, NFR-011 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 **Biblical Principle Trace:**
 - **Universal Application:** 10% gross income (BR-002) → Data Accuracy (NFR-015)
@@ -41,7 +41,7 @@ This document provides complete traceability between MVP features, user personas
 | FR-006: Budget Monitoring | NFR-001, NFR-014 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 **Persona-Specific Trace:**
-- **Pre-Teen:** Basic categories (FR-005) → Educational Focus (NFR-012)
+- **Pre-Teen:** Basic categories (FR-005) → Parental Approval (NFR-006)
 - **Teen:** Simplified categories (FR-005) → Learning Curve (NFR-012)
 - **Married Couple:** Joint management (FR-005) → Shared Access (NFR-006)
 - **Fixed-Income:** Healthcare categories (FR-005) → Interface Adaptation (NFR-011)
@@ -54,7 +54,7 @@ This document provides complete traceability between MVP features, user personas
 | FR-008: Savings Progress Tracking | NFR-001, NFR-021 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 **Persona-Specific Trace:**
-- **Pre-Teen:** Small savings goals (FR-007) → Educational Focus (NFR-012)
+- **Pre-Teen:** Small savings goals (FR-007) → Parent Supervision (NFR-006)
 - **Teen:** Age-appropriate targets (FR-007) → Interface Adaptation (NFR-011)
 - **College Student:** Semester goals (FR-007) → Learning Curve (NFR-012)
 - **Single Parent:** Priority allocation (FR-007) → Performance (NFR-001)
@@ -67,7 +67,7 @@ This document provides complete traceability between MVP features, user personas
 | FR-010: Dashboard Customization | NFR-011, NFR-012 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 **Persona-Specific Trace:**
-- **Pre-Teen:** Visual dashboard (FR-009) → Educational Interface (NFR-011)
+- **Pre-Teen:** Simple dashboard (FR-009) → Collaborative Interface (NFR-011)
 - **Teen:** Gamified elements (FR-009) → Interface Adaptation (NFR-011)
 - **Fixed-Income:** Large fonts (FR-009) → Accessibility (NFR-009)
 - **Single Parent:** Quick access (FR-009) → Response Time (NFR-001)
@@ -85,12 +85,13 @@ This document provides complete traceability between MVP features, user personas
 
 ### Feature 7: Goal-Based Notifications
 
-| Functional Requirement | NFR Mapping | Teen | College | Single Adult | Married Couple | Single Parent | Two Parent | Fixed-Income |
-|------------------------|-------------|------|---------|--------------|----------------|---------------|------------|-------------|
-| FR-013: Progress Notifications | NFR-001, NFR-011 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| FR-014: Customizable Alerts | NFR-011, NFR-012 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Functional Requirement | NFR Mapping | Pre-Teen | Teen | College | Single Adult | Married Couple | Single Parent | Two Parent | Fixed-Income |
+|------------------------|-------------|----------|------|---------|--------------|----------------|---------------|------------|-------------|
+| FR-013: Progress Notifications | NFR-001, NFR-011 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| FR-014: Customizable Alerts | NFR-011, NFR-012 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 **Persona-Specific Trace:**
+- **Pre-Teen:** Simple notifications (FR-013) → Parent Communication (NFR-011)
 - **Teen:** Gamified notifications (FR-013) → Interface Adaptation (NFR-011)
 - **Fixed-Income:** Email preference (FR-013) → Accessibility (NFR-009)
 - **Single Parent:** Priority alerts (FR-014) → Performance (NFR-001)
@@ -127,7 +128,7 @@ This document provides complete traceability between MVP features, user personas
 
 | Persona | Functional Reqs | Non-Functional Reqs | Special Considerations | Coverage Score |
 |---------|----------------|-------------------|----------------------|----------------|
-| **Pre-Teen (8-14)** | 15/15 (100%) | 23/23 (100%) | Educational focus, parental control, manual entry only | ✅ Complete |
+| **Pre-Teen (8-14)** | 15/15 (100%) | 23/23 (100%) | Parent-child collaboration, parental control, manual entry only | ✅ Complete |
 | **Teen (15-17)** | 14/14 (100%) | 23/23 (100%) | Parental consent, education, gamification | ✅ Complete |
 | **College Student (18-22)** | 14/14 (100%) | 23/23 (100%) | Variable income, mobile-first, data costs | ✅ Complete |
 | **Single Adult (25-40)** | 14/14 (100%) | 23/23 (100%) | Professional interface, multi-platform | ✅ Complete |

@@ -10,7 +10,7 @@ This document defines the non-functional requirements for Faithful Finances, exp
 
 ### 1.2 Scope
 These requirements ensure the application provides optimal user experience and technical performance for:
-- **Pre-Teen (8-14 years)** - Educational focus, parental oversight, simple interfaces
+- **Pre-Teen (8-14 years)** - Parent-child collaboration, full parental oversight, simple tracking interfaces
 - **Teen (15-17 years)** - High mobile usage, budget devices
 - **College Student (18-22 years)** - Mobile-first, variable connectivity
 - **Single Adult (25-40 years)** - Multi-platform usage, professional needs
@@ -36,7 +36,7 @@ All requirements follow SMART criteria (Specific, Measurable, Achievable, Releva
 - **Offline Mode:** Instant load for cached content
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** ≤1 second for educational content and visual feedback (short attention span)
+- **Pre-Teen:** ≤1 second for basic tracking operations and parent notifications
 - **Teen:** ≤1.5 seconds for core features (attention span consideration)
 - **Fixed-Income:** ≤3 seconds on 2G networks (budget plan consideration)
 - **Single Parent:** ≤1 second for quick access features
@@ -133,7 +133,7 @@ All requirements follow SMART criteria (Specific, Measurable, Achievable, Releva
 - **Color Contrast:** Minimum 7:1 ratio for text
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Extra large fonts (minimum 18px), high contrast, simple navigation, audio support
+- **Pre-Teen:** Large fonts (minimum 16px), high contrast, simple navigation, parent-shared interface
 - **Fixed-Income:** Enhanced font sizes (minimum 16px)
 - **Senior Users:** High contrast mode, reduced motion options
 - **Vision Impaired:** Voice control integration
@@ -159,7 +159,7 @@ All requirements follow SMART criteria (Specific, Measurable, Achievable, Releva
 - **Browser Compatibility:** Latest versions of Chrome, Safari, Firefox, Edge
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Highly visual interface with animations, large touch targets (minimum 48px), parental controls
+- **Pre-Teen:** Simple interface with large touch targets (minimum 44px), full parental access and control
 - **Teen:** Gamified elements, progress indicators
 - **College Student:** Dark mode support, compact layouts
 - **Fixed-Income:** Simplified navigation, large buttons
@@ -301,7 +301,7 @@ All requirements follow SMART criteria (Specific, Measurable, Achievable, Releva
 | Performance | Very High | High | High | Medium | Medium | High | Medium | Medium |
 | Security | Full Parental | Parental | Standard | High | High | High | High | Enhanced |
 | Accessibility | Enhanced | Standard | Standard | Standard | Standard | Standard | Standard | Enhanced |
-| Usability | Educational | Simplified | Mobile-First | Professional | Collaborative | Efficient | Family-Focused | Accessible |
+| Usability | Collaborative | Simplified | Mobile-First | Professional | Collaborative | Efficient | Family-Focused | Accessible |
 
 ## 10. Success Metrics
 
