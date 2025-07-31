@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core colors - Faith-based theme */
+    --background: 210 20% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 76% 36%;
+    --radius: 0.75rem;
+    
+    /* Faith-based custom colors */
+    --faith-gold: 45 93% 58%;
+    --faith-blue: 213 94% 68%;
+    --faith-green: 142 76% 36%;
+    --faith-purple: 262 83% 58%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142 76% 36%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Performance-optimized glass morphism */
+  .glass-panel {
+    @apply bg-background/80 backdrop-blur-xl border border-border/50;
+    /* Use transform3d to trigger hardware acceleration */
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+  
+  /* Hardware-accelerated interactive cards */
+  .interactive-card {
+    @apply transition-all duration-300 cursor-pointer;
+    transform: translate3d(0, 0, 0);
+    will-change: transform, box-shadow;
+  }
+  
+  .interactive-card:hover {
+    transform: translate3d(0, -2px, 0) scale(1.02);
+    @apply shadow-xl shadow-primary/10;
+  }
+  
+  /* Optimized glow effects */
+  .glow-effect {
+    @apply shadow-lg;
+    box-shadow: 0 10px 25px -5px rgba(var(--primary), 0.1),
+                0 4px 6px -2px rgba(var(--primary), 0.05);
+  }
+  
+  /* Faith-based gradient backgrounds */
+  .faith-gradient {
+    background: linear-gradient(135deg, 
+      hsl(var(--faith-blue)) 0%, 
+      hsl(var(--faith-green)) 50%, 
+      hsl(var(--faith-gold)) 100%);
+  }
+  
+  /* Performance-optimized loading states */
+  .skeleton {
+    @apply bg-muted animate-pulse;
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted-foreground) / 0.1) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  /* Optimized scroll areas */
+  .scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) transparent;
+  }
+  
+  .scroll-area::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scroll-area::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground));
+    border-radius: 3px;
+  }
+  
+  /* Performance-focused responsive utilities */
+  .responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  /* Persona-specific optimizations */
+  .teen-interface {
+    @apply text-base leading-relaxed;
+    /* Optimize for touch interactions */
+    touch-action: manipulation;
+  }
+  
+  .fixed-income-interface {
+    @apply text-lg leading-loose;
+    /* High contrast optimizations */
+    --contrast-multiplier: 1.2;
+  }
+  
+  .mobile-first {
+    /* Mobile-first performance optimizations */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Virtual scrolling container */
+  .virtual-scroll-container {
+    height: 100%;
+    overflow: auto;
+    will-change: scroll-position;
+  }
+  
+  .virtual-scroll-item {
+    /* Use transform3d for better performance */
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 20%;
+    --ring: 142 76% 36%;
+  }
+  
+  .dark {
+    --border: 0 0% 80%;
+    --foreground: 0 0% 100%;
+  }
+}
+
+/* Print optimizations */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .glass-panel {
+    background: white !important;
+    backdrop-filter: none !important;
+    border: 1px solid #ccc !important;
+  }
+}

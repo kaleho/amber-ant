@@ -1,0 +1,886 @@
+{
+  "users": [
+    {
+      "id": "auth0|507f1f77bcf86cd799439011",
+      "email": "john.smith@email.com",
+      "name": "John Smith",
+      "persona": "single_adult",
+      "preferences": {
+        "theme": "light",
+        "notifications": {
+          "email": true,
+          "push": true,
+          "sms": false,
+          "frequency": "daily"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": null,
+      "family_role": null,
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "auth0|507f1f77bcf86cd799439012",
+      "email": "sarah.johnson@email.com",
+      "name": "Sarah Johnson",
+      "persona": "married_couple",
+      "preferences": {
+        "theme": "auto",
+        "notifications": {
+          "email": true,
+          "push": true,
+          "sms": true,
+          "frequency": "immediate"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "family_role": "administrator",
+      "created_at": "2024-01-10T14:20:00Z",
+      "updated_at": "2024-01-20T16:45:00Z"
+    },
+    {
+      "id": "auth0|507f1f77bcf86cd799439013",
+      "email": "mike.johnson@email.com",
+      "name": "Mike Johnson",
+      "persona": "married_couple",
+      "preferences": {
+        "theme": "dark",
+        "notifications": {
+          "email": true,
+          "push": false,
+          "sms": false,
+          "frequency": "weekly"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "family_role": "spouse",
+      "created_at": "2024-01-10T14:25:00Z",
+      "updated_at": "2024-01-18T11:30:00Z"
+    },
+    {
+      "id": "auth0|507f1f77bcf86cd799439014",
+      "email": "emma.johnson@email.com",
+      "name": "Emma Johnson",
+      "persona": "teen",
+      "preferences": {
+        "theme": "dark",
+        "notifications": {
+          "email": false,
+          "push": true,
+          "sms": false,
+          "frequency": "immediate"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "family_role": "teen",
+      "created_at": "2024-01-12T09:15:00Z",
+      "updated_at": "2024-01-25T13:20:00Z"
+    },
+    {
+      "id": "auth0|507f1f77bcf86cd799439015",
+      "email": "lisa.williams@email.com",
+      "name": "Lisa Williams",
+      "persona": "single_parent",
+      "preferences": {
+        "theme": "light",
+        "notifications": {
+          "email": true,
+          "push": true,
+          "sms": true,
+          "frequency": "immediate"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "family_role": "administrator",
+      "created_at": "2024-01-08T16:00:00Z",
+      "updated_at": "2024-01-22T10:30:00Z"
+    },
+    {
+      "id": "auth0|507f1f77bcf86cd799439016",
+      "email": "alex.williams@email.com",
+      "name": "Alex Williams",
+      "persona": "pre_teen",
+      "preferences": {
+        "theme": "light",
+        "notifications": {
+          "email": false,
+          "push": false,
+          "sms": false,
+          "frequency": "weekly"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "family_role": "pre_teen",
+      "created_at": "2024-01-09T12:45:00Z",
+      "updated_at": "2024-01-20T14:15:00Z"
+    },
+    {
+      "id": "auth0|507f1f77bcf86cd799439017",
+      "email": "david.brown@email.com",
+      "name": "David Brown",
+      "persona": "college_student",
+      "preferences": {
+        "theme": "dark",
+        "notifications": {
+          "email": true,
+          "push": true,
+          "sms": false,
+          "frequency": "daily"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": null,
+      "family_role": null,
+      "created_at": "2024-01-20T08:30:00Z",
+      "updated_at": "2024-01-26T15:20:00Z"
+    },
+    {
+      "id": "auth0|507f1f77bcf86cd799439018",
+      "email": "robert.miller@email.com",
+      "name": "Robert Miller",
+      "persona": "fixed_income",
+      "preferences": {
+        "theme": "light",
+        "notifications": {
+          "email": true,
+          "push": false,
+          "sms": true,
+          "frequency": "weekly"
+        },
+        "currency": "USD",
+        "date_format": "MM/DD/YYYY"
+      },
+      "family_id": null,
+      "family_role": null,
+      "created_at": "2024-01-05T11:00:00Z",
+      "updated_at": "2024-01-15T09:45:00Z"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "user_id": "auth0|507f1f77bcf86cd799439011",
+      "plaid_account_id": "BxBXxLj1m4HMXBm9WZZmCWVbPjX16EHwv99vp",
+      "name": "Chase Checking",
+      "official_name": "Chase Total Checking®",
+      "type": "depository",
+      "subtype": "checking",
+      "balance": {
+        "available": 2450.75,
+        "current": 2580.50,
+        "limit": null,
+        "iso_currency_code": "USD"
+      },
+      "mask": "0000",
+      "is_active": true,
+      "created_at": "2024-01-15T10:35:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "user_id": "auth0|507f1f77bcf86cd799439011",
+      "plaid_account_id": "6yyx9wwmmwHMXBm9WZJjCWVbPjX16EHwv99vp",
+      "name": "Chase Savings",
+      "official_name": "Chase Savings℠",
+      "type": "depository",
+      "subtype": "savings",
+      "balance": {
+        "available": 8750.25,
+        "current": 8750.25,
+        "limit": null,
+        "iso_currency_code": "USD"
+      },
+      "mask": "1111",
+      "is_active": true,
+      "created_at": "2024-01-15T10:35:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "user_id": "auth0|507f1f77bcf86cd799439012",
+      "plaid_account_id": "BxBXxLj1m4HMXBm9WZZmCWVbPjX16EHwv99vq",
+      "name": "Bank of America Checking",
+      "official_name": "Bank of America Advantage Plus Banking®",
+      "type": "depository",
+      "subtype": "checking",
+      "balance": {
+        "available": 4250.80,
+        "current": 4380.90,
+        "limit": null,
+        "iso_currency_code": "USD"
+      },
+      "mask": "2222",
+      "is_active": true,
+      "created_at": "2024-01-10T14:25:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "user_id": "auth0|507f1f77bcf86cd799439013",
+      "plaid_account_id": "9zzz1mmnnwHMXBm9WZJjCWVbPjX16EHwv99vr",
+      "name": "Wells Fargo Checking",
+      "official_name": "Wells Fargo Everyday Checking",
+      "type": "depository",
+      "subtype": "checking",
+      "balance": {
+        "available": 1850.40,
+        "current": 1920.65,
+        "limit": null,
+        "iso_currency_code": "USD"
+      },
+      "mask": "3333",
+      "is_active": true,
+      "created_at": "2024-01-10T14:30:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440004",
+      "user_id": "auth0|507f1f77bcf86cd799439014",
+      "plaid_account_id": "TeenAccount123456789",
+      "name": "Teen Savings Account",
+      "official_name": "Student Savings Account",
+      "type": "depository",
+      "subtype": "savings",
+      "balance": {
+        "available": 325.50,
+        "current": 325.50,
+        "limit": null,
+        "iso_currency_code": "USD"
+      },
+      "mask": "4444",
+      "is_active": true,
+      "created_at": "2024-01-12T09:20:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "txn_550e8400-e29b-41d4-a716-446655440000",
+      "plaid_transaction_id": "lPNjeW1nR6CDn5okmGQ6hEpMo4lLNoSrzqDje",
+      "account_id": "550e8400-e29b-41d4-a716-446655440000",
+      "amount": 87.45,
+      "iso_currency_code": "USD",
+      "date": "2024-01-30",
+      "authorized_date": "2024-01-30",
+      "name": "Kroger #1234",
+      "merchant_name": "Kroger",
+      "plaid_category": "groceries",
+      "plaid_category_detailed": ["Food and Drink", "Groceries"],
+      "app_expense_type": "split",
+      "is_split": true,
+      "split_details": {
+        "fixed_categories": [
+          {
+            "category": "groceries",
+            "amount": 62.30
+          }
+        ],
+        "discretionary_categories": [
+          {
+            "category": "groceries",
+            "amount": 25.15
+          }
+        ]
+      },
+      "notes": "Weekly grocery shopping - split between essentials and treats",
+      "is_tithing_income": false,
+      "created_at": "2024-01-30T14:20:00Z",
+      "updated_at": "2024-01-30T18:45:00Z"
+    },
+    {
+      "id": "txn_550e8400-e29b-41d4-a716-446655440001",
+      "plaid_transaction_id": "yGHyeW1nR6CDn5okmGQ6hEpMo4lLNoSrzqDjf",
+      "account_id": "550e8400-e29b-41d4-a716-446655440000",
+      "amount": 3200.00,
+      "iso_currency_code": "USD",
+      "date": "2024-01-31",
+      "authorized_date": null,
+      "name": "ACME CORP PAYROLL",
+      "merchant_name": "ACME Corp",
+      "plaid_category": "deposit",
+      "plaid_category_detailed": ["Deposit", "Payroll"],
+      "app_expense_type": "fixed",
+      "is_split": false,
+      "split_details": null,
+      "notes": "Monthly salary deposit",
+      "is_tithing_income": true,
+      "created_at": "2024-01-31T08:00:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    },
+    {
+      "id": "txn_550e8400-e29b-41d4-a716-446655440002",
+      "plaid_transaction_id": "zKLzeW1nR6CDn5okmGQ6hEpMo4lLNoSrzqDjg",
+      "account_id": "550e8400-e29b-41d4-a716-446655440000",
+      "amount": 45.67,
+      "iso_currency_code": "USD",
+      "date": "2024-01-29",
+      "authorized_date": "2024-01-29",
+      "name": "Shell Gas Station",
+      "merchant_name": "Shell",
+      "plaid_category": "transportation",
+      "plaid_category_detailed": ["Transportation", "Gas Stations"],
+      "app_expense_type": "fixed",
+      "is_split": false,
+      "split_details": null,
+      "notes": "Gas for work commute",
+      "is_tithing_income": false,
+      "created_at": "2024-01-29T16:30:00Z",
+      "updated_at": "2024-01-29T16:30:00Z"
+    },
+    {
+      "id": "txn_550e8400-e29b-41d4-a716-446655440003",
+      "plaid_transaction_id": "aMNaeW1nR6CDn5okmGQ6hEpMo4lLNoSrzqDjh",
+      "account_id": "550e8400-e29b-41d4-a716-446655440000",
+      "amount": 127.89,
+      "iso_currency_code": "USD",
+      "date": "2024-01-28",
+      "authorized_date": "2024-01-28",
+      "name": "Target Store T-1234",
+      "merchant_name": "Target",
+      "plaid_category": "shopping",
+      "plaid_category_detailed": ["Shops", "Department Stores"],
+      "app_expense_type": "split",
+      "is_split": true,
+      "split_details": {
+        "fixed_categories": [
+          {
+            "category": "household",
+            "amount": 73.45
+          }
+        ],
+        "discretionary_categories": [
+          {
+            "category": "shopping",
+            "amount": 54.44
+          }
+        ]
+      },
+      "notes": "Household essentials + some clothing items",
+      "is_tithing_income": false,
+      "created_at": "2024-01-28T19:15:00Z",
+      "updated_at": "2024-01-28T20:30:00Z"
+    },
+    {
+      "id": "txn_550e8400-e29b-41d4-a716-446655440004",
+      "plaid_transaction_id": "bOPbeW1nR6CDn5okmGQ6hEpMo4lLNoSrzqDji",
+      "account_id": "550e8400-e29b-41d4-a716-446655440000",
+      "amount": 1250.00,
+      "iso_currency_code": "USD",
+      "date": "2024-01-01",
+      "authorized_date": "2024-01-01",
+      "name": "Oak Ridge Apartments",
+      "merchant_name": "Oak Ridge Apartments",
+      "plaid_category": "rent",
+      "plaid_category_detailed": ["Payment", "Rent"],
+      "app_expense_type": "fixed",
+      "is_split": false,
+      "split_details": null,
+      "notes": "Monthly rent payment",
+      "is_tithing_income": false,
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
+    },
+    {
+      "id": "txn_550e8400-e29b-41d4-a716-446655440005",
+      "plaid_transaction_id": null,
+      "account_id": "550e8400-e29b-41d4-a716-446655440004",
+      "amount": 25.00,
+      "iso_currency_code": "USD",
+      "date": "2024-01-15",
+      "authorized_date": null,
+      "name": "Allowance - January",
+      "merchant_name": null,
+      "plaid_category": "transfer",
+      "plaid_category_detailed": ["Transfer", "Deposit"],
+      "app_expense_type": "fixed",
+      "is_split": false,
+      "split_details": null,
+      "notes": "Monthly allowance from mom",
+      "is_tithing_income": true,
+      "created_at": "2024-01-15T12:00:00Z",
+      "updated_at": "2024-01-15T12:00:00Z"
+    },
+    {
+      "id": "txn_550e8400-e29b-41d4-a716-446655440006",
+      "plaid_transaction_id": null,
+      "account_id": "550e8400-e29b-41d4-a716-446655440004",
+      "amount": 15.99,
+      "iso_currency_code": "USD",
+      "date": "2024-01-20",
+      "authorized_date": null,
+      "name": "iTunes Store",
+      "merchant_name": "Apple",
+      "plaid_category": "entertainment",
+      "plaid_category_detailed": ["Recreation", "Music and Audio"],
+      "app_expense_type": "discretionary",
+      "is_split": false,
+      "split_details": null,
+      "notes": "Music and app purchases",
+      "is_tithing_income": false,
+      "created_at": "2024-01-20T16:30:00Z",
+      "updated_at": "2024-01-20T16:30:00Z"
+    }
+  ],
+  "budgets": [
+    {
+      "id": "budget_550e8400-e29b-41d4-a716-446655440000",
+      "user_id": "auth0|507f1f77bcf86cd799439011",
+      "name": "February 2024 Budget",
+      "period": "monthly",
+      "start_date": "2024-02-01",
+      "end_date": "2024-02-29",
+      "categories": [
+        {
+          "category": "groceries",
+          "expense_type": "fixed",
+          "budgeted_amount": 400.00,
+          "spent_amount": 287.45,
+          "remaining_amount": 112.55
+        },
+        {
+          "category": "groceries",
+          "expense_type": "discretionary",
+          "budgeted_amount": 100.00,
+          "spent_amount": 65.30,
+          "remaining_amount": 34.70
+        },
+        {
+          "category": "transportation",
+          "expense_type": "fixed",
+          "budgeted_amount": 200.00,
+          "spent_amount": 145.67,
+          "remaining_amount": 54.33
+        },
+        {
+          "category": "rent",
+          "expense_type": "fixed",
+          "budgeted_amount": 1250.00,
+          "spent_amount": 1250.00,
+          "remaining_amount": 0.00
+        },
+        {
+          "category": "entertainment",
+          "expense_type": "discretionary",
+          "budgeted_amount": 150.00,
+          "spent_amount": 89.50,
+          "remaining_amount": 60.50
+        },
+        {
+          "category": "household",
+          "expense_type": "fixed",
+          "budgeted_amount": 100.00,
+          "spent_amount": 73.45,
+          "remaining_amount": 26.55
+        }
+      ],
+      "total_budget": 2200.00,
+      "total_spent": 1911.37,
+      "is_active": true,
+      "created_at": "2024-01-31T09:00:00Z",
+      "updated_at": "2024-02-15T14:30:00Z"
+    },
+    {
+      "id": "budget_550e8400-e29b-41d4-a716-446655440001",
+      "user_id": "auth0|507f1f77bcf86cd799439014",
+      "name": "Teen Budget - February 2024",
+      "period": "monthly",
+      "start_date": "2024-02-01",
+      "end_date": "2024-02-29",
+      "categories": [
+        {
+          "category": "entertainment",
+          "expense_type": "discretionary",
+          "budgeted_amount": 40.00,
+          "spent_amount": 25.99,
+          "remaining_amount": 14.01
+        },
+        {
+          "category": "clothing",
+          "expense_type": "fixed",
+          "budgeted_amount": 50.00,
+          "spent_amount": 0.00,
+          "remaining_amount": 50.00
+        },
+        {
+          "category": "food",
+          "expense_type": "discretionary",
+          "budgeted_amount": 30.00,
+          "spent_amount": 12.50,
+          "remaining_amount": 17.50
+        }
+      ],
+      "total_budget": 120.00,
+      "total_spent": 38.49,
+      "is_active": true,
+      "created_at": "2024-01-31T10:15:00Z",
+      "updated_at": "2024-02-10T16:20:00Z"
+    }
+  ],
+  "savings_goals": [
+    {
+      "id": "goal_550e8400-e29b-41d4-a716-446655440000",
+      "user_id": "auth0|507f1f77bcf86cd799439011",
+      "name": "Emergency Fund",
+      "description": "6 months of expenses for financial security",
+      "target_amount": 15000.00,
+      "current_amount": 8750.25,
+      "target_date": "2024-12-31",
+      "progress_percentage": 58.34,
+      "is_completed": false,
+      "created_at": "2024-01-15T11:00:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    },
+    {
+      "id": "goal_550e8400-e29b-41d4-a716-446655440001",
+      "user_id": "auth0|507f1f77bcf86cd799439014",
+      "name": "Teen Emergency Fund",
+      "description": "Small emergency fund for unexpected expenses",
+      "target_amount": 500.00,
+      "current_amount": 325.50,
+      "target_date": "2024-06-30",
+      "progress_percentage": 65.10,
+      "is_completed": false,
+      "created_at": "2024-01-12T09:30:00Z",
+      "updated_at": "2024-01-31T08:00:00Z"
+    },
+    {
+      "id": "goal_550e8400-e29b-41d4-a716-446655440002",
+      "user_id": "auth0|507f1f77bcf86cd799439015",
+      "name": "Single Parent Emergency Fund",
+      "description": "Enhanced 9-month emergency fund for single parent security",
+      "target_amount": 25000.00,
+      "current_amount": 12500.00,
+      "target_date": "2025-01-01",
+      "progress_percentage": 50.00,
+      "is_completed": false,
+      "created_at": "2024-01-08T16:15:00Z",
+      "updated_at": "2024-01-30T10:00:00Z"
+    }
+  ],
+  "tithing_summaries": [
+    {
+      "user_id": "auth0|507f1f77bcf86cd799439011",
+      "year": 2024,
+      "total_income": 38400.00,
+      "total_tithe_due": 3840.00,
+      "total_tithe_paid": 3520.00,
+      "balance": -320.00,
+      "current_percentage": 9.17,
+      "recent_payments": [
+        {
+          "id": "tithe_550e8400-e29b-41d4-a716-446655440000",
+          "amount": 320.00,
+          "date": "2024-01-31",
+          "method": "online",
+          "recipient": "First Baptist Church",
+          "notes": "Monthly tithe payment",
+          "created_at": "2024-01-31T19:00:00Z"
+        },
+        {
+          "id": "tithe_550e8400-e29b-41d4-a716-446655440001",
+          "amount": 300.00,
+          "date": "2024-01-01",
+          "method": "check",
+          "recipient": "First Baptist Church",
+          "notes": "December tithe payment",
+          "created_at": "2024-01-01T08:30:00Z"
+        }
+      ]
+    },
+    {
+      "user_id": "auth0|507f1f77bcf86cd799439014",
+      "year": 2024,
+      "total_income": 300.00,
+      "total_tithe_due": 30.00,
+      "total_tithe_paid": 30.00,
+      "balance": 0.00,
+      "current_percentage": 10.00,
+      "recent_payments": [
+        {
+          "id": "tithe_550e8400-e29b-41d4-a716-446655440002",
+          "amount": 2.50,
+          "date": "2024-01-15",
+          "method": "cash",
+          "recipient": "First Baptist Church Youth",
+          "notes": "Tithe from January allowance",
+          "created_at": "2024-01-15T18:00:00Z"
+        }
+      ]
+    }
+  ],
+  "families": [
+    {
+      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "name": "Johnson Family",
+      "administrator_id": "auth0|507f1f77bcf86cd799439012",
+      "members": [
+        {
+          "id": "member_550e8400-e29b-41d4-a716-446655440000",
+          "user_id": "auth0|507f1f77bcf86cd799439012",
+          "name": "Sarah Johnson",
+          "email": "sarah.johnson@email.com",
+          "role": "administrator",
+          "permissions": {
+            "can_view_accounts": true,
+            "can_view_transactions": true,
+            "can_manage_budget": true,
+            "can_approve_spending": true,
+            "requires_approval_over": null,
+            "can_invite_members": true
+          },
+          "status": "active",
+          "joined_at": "2024-01-10T14:20:00Z"
+        },
+        {
+          "id": "member_550e8400-e29b-41d4-a716-446655440001",
+          "user_id": "auth0|507f1f77bcf86cd799439013",
+          "name": "Mike Johnson",
+          "email": "mike.johnson@email.com",
+          "role": "spouse",
+          "permissions": {
+            "can_view_accounts": true,
+            "can_view_transactions": true,
+            "can_manage_budget": true,
+            "can_approve_spending": true,
+            "requires_approval_over": 500.00,
+            "can_invite_members": false
+          },
+          "status": "active",
+          "joined_at": "2024-01-10T14:25:00Z"
+        },
+        {
+          "id": "member_550e8400-e29b-41d4-a716-446655440002",
+          "user_id": "auth0|507f1f77bcf86cd799439014",
+          "name": "Emma Johnson",
+          "email": "emma.johnson@email.com",
+          "role": "teen",
+          "permissions": {
+            "can_view_accounts": true,
+            "can_view_transactions": true,
+            "can_manage_budget": false,
+            "can_approve_spending": false,
+            "requires_approval_over": 50.00,
+            "can_invite_members": false
+          },
+          "status": "active",
+          "joined_at": "2024-01-12T09:15:00Z"
+        }
+      ],
+      "settings": {
+        "joint_tithing": true,
+        "shared_emergency_fund": true,
+        "notification_coordination": true
+      },
+      "created_at": "2024-01-10T14:20:00Z",
+      "updated_at": "2024-01-20T16:45:00Z"
+    },
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Williams Family",
+      "administrator_id": "auth0|507f1f77bcf86cd799439015",
+      "members": [
+        {
+          "id": "member_550e8400-e29b-41d4-a716-446655440003",
+          "user_id": "auth0|507f1f77bcf86cd799439015",
+          "name": "Lisa Williams",
+          "email": "lisa.williams@email.com",
+          "role": "administrator",
+          "permissions": {
+            "can_view_accounts": true,
+            "can_view_transactions": true,
+            "can_manage_budget": true,
+            "can_approve_spending": true,
+            "requires_approval_over": null,
+            "can_invite_members": true
+          },
+          "status": "active",
+          "joined_at": "2024-01-08T16:00:00Z"
+        },
+        {
+          "id": "member_550e8400-e29b-41d4-a716-446655440004",
+          "user_id": "auth0|507f1f77bcf86cd799439016",
+          "name": "Alex Williams",
+          "email": "alex.williams@email.com",
+          "role": "pre_teen",
+          "permissions": {
+            "can_view_accounts": false,
+            "can_view_transactions": true,
+            "can_manage_budget": false,
+            "can_approve_spending": false,
+            "requires_approval_over": 0.01,
+            "can_invite_members": false
+          },
+          "status": "active",
+          "joined_at": "2024-01-09T12:45:00Z"
+        }
+      ],
+      "settings": {
+        "joint_tithing": false,
+        "shared_emergency_fund": true,
+        "notification_coordination": true
+      },
+      "created_at": "2024-01-08T16:00:00Z",
+      "updated_at": "2024-01-22T10:30:00Z"
+    }
+  ],
+  "family_invitations": [
+    {
+      "id": "invite_550e8400-e29b-41d4-a716-446655440000",
+      "family_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "inviter_id": "auth0|507f1f77bcf86cd799439012",
+      "email": "grandpa.johnson@email.com",
+      "role": "support",
+      "permissions": {
+        "can_view_accounts": false,
+        "can_view_transactions": false,
+        "can_manage_budget": false,
+        "can_approve_spending": false,
+        "requires_approval_over": null,
+        "can_invite_members": false
+      },
+      "message": "Would you like to help Emma with her financial education?",
+      "status": "pending",
+      "expires_at": "2024-02-15T14:20:00Z",
+      "created_at": "2024-01-15T14:20:00Z"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "sub_550e8400-e29b-41d4-a716-446655440000",
+      "user_id": "auth0|507f1f77bcf86cd799439012",
+      "stripe_subscription_id": "sub_1234567890abcdef",
+      "plan": "premium_family",
+      "status": "active",
+      "current_period_start": "2024-01-10T14:20:00Z",
+      "current_period_end": "2024-02-10T14:20:00Z",
+      "trial_end": null,
+      "cancel_at_period_end": false,
+      "created_at": "2024-01-10T14:20:00Z",
+      "updated_at": "2024-01-10T14:20:00Z"
+    },
+    {
+      "id": "sub_550e8400-e29b-41d4-a716-446655440001",
+      "user_id": "auth0|507f1f77bcf86cd799439011",
+      "stripe_subscription_id": "sub_abcdef1234567890",
+      "plan": "premium_individual",
+      "status": "active",
+      "current_period_start": "2024-01-15T10:30:00Z",
+      "current_period_end": "2024-02-15T10:30:00Z",
+      "trial_end": "2024-01-29T10:30:00Z",
+      "cancel_at_period_end": false,
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "categories": {
+    "plaid_categories": [
+      "groceries",
+      "transportation",
+      "rent",
+      "utilities",
+      "health",
+      "entertainment",
+      "shopping",
+      "dining",
+      "household",
+      "clothing",
+      "education",
+      "professional_services",
+      "insurance",
+      "travel",
+      "personal_care",
+      "gifts",
+      "charity",
+      "taxes"
+    ],
+    "expense_types": [
+      "fixed",
+      "discretionary"
+    ]
+  },
+  "common_split_patterns": {
+    "groceries": {
+      "typical_fixed_percentage": 70,
+      "typical_discretionary_percentage": 30,
+      "fixed_items": ["milk", "bread", "eggs", "vegetables", "meat", "household supplies"],
+      "discretionary_items": ["snacks", "desserts", "premium brands", "convenience items"]
+    },
+    "shopping": {
+      "typical_fixed_percentage": 40,
+      "typical_discretionary_percentage": 60,
+      "fixed_items": ["household necessities", "basic clothing", "school supplies"],
+      "discretionary_items": ["luxury items", "entertainment", "fashion", "gadgets"]
+    },
+    "transportation": {
+      "typical_fixed_percentage": 90,
+      "typical_discretionary_percentage": 10,
+      "fixed_items": ["gas", "maintenance", "insurance", "parking"],
+      "discretionary_items": ["car washes", "premium fuel", "accessories"]
+    }
+  },
+  "persona_budget_templates": {
+    "pre_teen": {
+      "categories": [
+        {"category": "entertainment", "expense_type": "discretionary", "percentage": 40},
+        {"category": "clothing", "expense_type": "fixed", "percentage": 30},
+        {"category": "food", "expense_type": "discretionary", "percentage": 20},
+        {"category": "charity", "expense_type": "fixed", "percentage": 10}
+      ]
+    },
+    "teen": {
+      "categories": [
+        {"category": "entertainment", "expense_type": "discretionary", "percentage": 30},
+        {"category": "clothing", "expense_type": "fixed", "percentage": 25},
+        {"category": "food", "expense_type": "discretionary", "percentage": 20},
+        {"category": "transportation", "expense_type": "fixed", "percentage": 15},
+        {"category": "charity", "expense_type": "fixed", "percentage": 10}
+      ]
+    },
+    "college_student": {
+      "categories": [
+        {"category": "education", "expense_type": "fixed", "percentage": 35},
+        {"category": "food", "expense_type": "fixed", "percentage": 20},
+        {"category": "housing", "expense_type": "fixed", "percentage": 15},
+        {"category": "transportation", "expense_type": "fixed", "percentage": 10},
+        {"category": "charity", "expense_type": "fixed", "percentage": 10},
+        {"category": "entertainment", "expense_type": "discretionary", "percentage": 10}
+      ]
+    },
+    "single_adult": {
+      "categories": [
+        {"category": "housing", "expense_type": "fixed", "percentage": 30},
+        {"category": "transportation", "expense_type": "fixed", "percentage": 15},
+        {"category": "groceries", "expense_type": "fixed", "percentage": 12},
+        {"category": "charity", "expense_type": "fixed", "percentage": 10},
+        {"category": "utilities", "expense_type": "fixed", "percentage": 8},
+        {"category": "health", "expense_type": "fixed", "percentage": 5},
+        {"category": "entertainment", "expense_type": "discretionary", "percentage": 10},
+        {"category": "shopping", "expense_type": "discretionary", "percentage": 10}
+      ]
+    },
+    "fixed_income": {
+      "categories": [
+        {"category": "housing", "expense_type": "fixed", "percentage": 35},
+        {"category": "health", "expense_type": "fixed", "percentage": 20},
+        {"category": "groceries", "expense_type": "fixed", "percentage": 15},
+        {"category": "charity", "expense_type": "fixed", "percentage": 10},
+        {"category": "utilities", "expense_type": "fixed", "percentage": 8},
+        {"category": "transportation", "expense_type": "fixed", "percentage": 7},
+        {"category": "entertainment", "expense_type": "discretionary", "percentage": 5}
+      ]
+    }
+  }
+}

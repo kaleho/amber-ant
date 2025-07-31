@@ -1,0 +1,2616 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Faithful Finances API",
+    "description": "Biblical stewardship-focused personal finance management API supporting 8 personas with dual transaction categorization, Plaid integration, and family collaboration features.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Faithful Finances Team",
+      "email": "api@faithfulfinances.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.faithfulfinances.com/v1",
+      "description": "Production server"
+    },
+    {
+      "url": "https://staging-api.faithfulfinances.com/v1",
+      "description": "Staging server"
+    },
+    {
+      "url": "http://localhost:8000/v1",
+      "description": "Development server"
+    }
+  ],
+  "security": [
+    {
+      "Auth0JWT": []
+    },
+    {
+      "ApiKey": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check endpoint",
+        "description": "Returns API health status and version information",
+        "tags": ["System"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheck"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get current user profile",
+        "description": "Returns the authenticated user's profile information",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": {
+            "description": "User profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "Create new user",
+        "description": "Create a new user account with persona-specific setup",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "summary": "Get user by ID",
+        "description": "Retrieve user information by user ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user profile",
+        "description": "Update user profile information",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/plaid/link-token": {
+      "post": {
+        "summary": "Create Plaid Link token",
+        "description": "Generate a Link token for Plaid account connection",
+        "tags": ["Plaid Integration"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link token created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/plaid/exchange-token": {
+      "post": {
+        "summary": "Exchange public token for access token",
+        "description": "Exchange Plaid public token for access token and create account connections",
+        "tags": ["Plaid Integration"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExchangeTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token exchanged successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/accounts": {
+      "get": {
+        "summary": "Get user accounts",
+        "description": "Retrieve all connected financial accounts for the user",
+        "tags": ["Accounts"],
+        "responses": {
+          "200": {
+            "description": "List of user accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}": {
+      "get": {
+        "summary": "Get account by ID",
+        "description": "Retrieve specific account information",
+        "tags": ["Accounts"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccountId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "summary": "Get transactions",
+        "description": "Retrieve transactions with optional filtering and pagination",
+        "tags": ["Transactions"],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "query",
+            "description": "Filter by account ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Filter transactions from this date (ISO 8601)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "Filter transactions until this date (ISO 8601)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by Plaid category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expense_type",
+            "in": "query",
+            "description": "Filter by expense type (fixed or discretionary)",
+            "schema": {
+              "type": "string",
+              "enum": ["fixed", "discretionary"]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of transactions to return (max 100)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of transactions to skip",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create manual transaction",
+        "description": "Create a manual transaction entry (for pre-teen persona)",
+        "tags": ["Transactions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/transactions/{transactionId}": {
+      "get": {
+        "summary": "Get transaction by ID",
+        "description": "Retrieve specific transaction information",
+        "tags": ["Transactions"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TransactionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update transaction",
+        "description": "Update transaction categorization and notes",
+        "tags": ["Transactions"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TransactionId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transaction updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/transactions/{transactionId}/split": {
+      "post": {
+        "summary": "Split transaction",
+        "description": "Split a transaction into multiple categories with different expense types",
+        "tags": ["Transactions"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TransactionId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SplitTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transaction split successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/budgets": {
+      "get": {
+        "summary": "Get user budgets",
+        "description": "Retrieve all budgets for the user",
+        "tags": ["Budgets"],
+        "responses": {
+          "200": {
+            "description": "List of budgets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Budget"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create budget",
+        "description": "Create a new budget with persona-appropriate categories",
+        "tags": ["Budgets"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBudgetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Budget created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Budget"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/budgets/{budgetId}": {
+      "get": {
+        "summary": "Get budget by ID",
+        "description": "Retrieve specific budget information",
+        "tags": ["Budgets"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BudgetId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Budget information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Budget"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update budget",
+        "description": "Update budget categories and amounts",
+        "tags": ["Budgets"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BudgetId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBudgetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Budget updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Budget"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete budget",
+        "description": "Delete a budget",
+        "tags": ["Budgets"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BudgetId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Budget deleted successfully"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/goals": {
+      "get": {
+        "summary": "Get savings goals",
+        "description": "Retrieve all savings goals for the user",
+        "tags": ["Goals"],
+        "responses": {
+          "200": {
+            "description": "List of savings goals",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SavingsGoal"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create savings goal",
+        "description": "Create a new savings goal (typically emergency fund)",
+        "tags": ["Goals"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSavingsGoalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Savings goal created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavingsGoal"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/goals/{goalId}": {
+      "get": {
+        "summary": "Get savings goal by ID",
+        "description": "Retrieve specific savings goal information",
+        "tags": ["Goals"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/GoalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Savings goal information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavingsGoal"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update savings goal",
+        "description": "Update savings goal target or progress",
+        "tags": ["Goals"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/GoalId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSavingsGoalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Savings goal updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavingsGoal"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/tithing": {
+      "get": {
+        "summary": "Get tithing summary",
+        "description": "Get current tithing status and history",
+        "tags": ["Tithing"],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Year for tithing summary (defaults to current year)",
+            "schema": {
+              "type": "integer",
+              "minimum": 2020,
+              "maximum": 2030
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tithing summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TithingSummary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Record tithing payment",
+        "description": "Record a tithing payment",
+        "tags": ["Tithing"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTithingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tithing payment recorded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TithingPayment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/families": {
+      "post": {
+        "summary": "Create family plan",
+        "description": "Create a new family plan and become the administrator",
+        "tags": ["Family Management"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFamilyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Family plan created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Family"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/families/{familyId}": {
+      "get": {
+        "summary": "Get family information",
+        "description": "Retrieve family plan information and member list",
+        "tags": ["Family Management"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FamilyId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Family information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Family"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update family information",
+        "description": "Update family plan name and settings (admin only)",
+        "tags": ["Family Management"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FamilyId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFamilyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Family updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Family"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/families/{familyId}/invitations": {
+      "post": {
+        "summary": "Invite family member",
+        "description": "Send invitation to join family plan",
+        "tags": ["Family Management"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FamilyId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FamilyInvitationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Invitation sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FamilyInvitation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/families/invitations/{invitationId}/accept": {
+      "post": {
+        "summary": "Accept family invitation",
+        "description": "Accept invitation to join a family plan",
+        "tags": ["Family Management"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/InvitationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invitation accepted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FamilyMember"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/families/{familyId}/members/{memberId}/permissions": {
+      "put": {
+        "summary": "Update member permissions",
+        "description": "Update family member permissions and oversight settings",
+        "tags": ["Family Management"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FamilyId"
+          },
+          {
+            "$ref": "#/components/parameters/MemberId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePermissionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Permissions updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FamilyMember"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/subscriptions": {
+      "get": {
+        "summary": "Get user subscriptions",
+        "description": "Retrieve all subscriptions for the user",
+        "tags": ["Subscriptions"],
+        "responses": {
+          "200": {
+            "description": "List of subscriptions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subscription"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create subscription",
+        "description": "Create a new subscription (upgrade to premium plans)",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubscriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}": {
+      "get": {
+        "summary": "Get subscription by ID",
+        "description": "Retrieve specific subscription information",
+        "tags": ["Subscriptions"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SubscriptionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update subscription",
+        "description": "Update subscription plan or payment method",
+        "tags": ["Subscriptions"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SubscriptionId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel subscription",
+        "description": "Cancel a subscription",
+        "tags": ["Subscriptions"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SubscriptionId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Subscription cancelled successfully"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Auth0JWT": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Auth0 JWT token for user authentication"
+      },
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API key for service-to-service authentication"
+      }
+    },
+    "parameters": {
+      "UserId": {
+        "name": "userId",
+        "in": "path",
+        "required": true,
+        "description": "User ID",
+        "schema": {
+          "type": "string",
+          "pattern": "^auth0\\|[a-zA-Z0-9]{24}$"
+        }
+      },
+      "AccountId": {
+        "name": "accountId",
+        "in": "path",
+        "required": true,
+        "description": "Account ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "TransactionId": {
+        "name": "transactionId",
+        "in": "path",
+        "required": true,
+        "description": "Transaction ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "BudgetId": {
+        "name": "budgetId",
+        "in": "path",
+        "required": true,
+        "description": "Budget ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "GoalId": {
+        "name": "goalId",
+        "in": "path",
+        "required": true,
+        "description": "Savings goal ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "FamilyId": {
+        "name": "familyId",
+        "in": "path",
+        "required": true,
+        "description": "Family ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "MemberId": {
+        "name": "memberId",
+        "in": "path",
+        "required": true,
+        "description": "Family member ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "InvitationId": {
+        "name": "invitationId",
+        "in": "path",
+        "required": true,
+        "description": "Invitation ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "SubscriptionId": {
+        "name": "subscriptionId",
+        "in": "path",
+        "required": true,
+        "description": "Subscription ID",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request - invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized - invalid or missing authentication",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden - insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Conflict - resource already exists",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "HealthCheck": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["healthy", "degraded", "unhealthy"]
+          },
+          "version": {
+            "type": "string",
+            "example": "1.0.0"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "services": {
+            "type": "object",
+            "properties": {
+              "database": {
+                "type": "string",
+                "enum": ["healthy", "degraded", "unhealthy"]
+              },
+              "plaid": {
+                "type": "string",
+                "enum": ["healthy", "degraded", "unhealthy"]
+              },
+              "auth0": {
+                "type": "string",
+                "enum": ["healthy", "degraded", "unhealthy"]
+              }
+            }
+          }
+        },
+        "required": ["status", "version", "timestamp"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional error details"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["error", "message", "timestamp"]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Auth0 user ID",
+            "example": "auth0|507f1f77bcf86cd799439011"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string"
+          },
+          "persona": {
+            "$ref": "#/components/schemas/PersonaType"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/UserPreferences"
+          },
+          "family_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Family plan ID if member of a family"
+          },
+          "family_role": {
+            "$ref": "#/components/schemas/FamilyRole"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "email", "name", "persona", "created_at", "updated_at"]
+      },
+      "PersonaType": {
+        "type": "string",
+        "enum": [
+          "pre_teen",
+          "teen",
+          "college_student",
+          "single_adult",
+          "married_couple",
+          "single_parent",
+          "two_parent_family",
+          "fixed_income"
+        ],
+        "description": "User persona determining appropriate features and interface"
+      },
+      "FamilyRole": {
+        "type": "string",
+        "enum": ["administrator", "spouse", "teen", "pre_teen", "support", "agent"],
+        "nullable": true,
+        "description": "Role within family plan"
+      },
+      "UserPreferences": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["light", "dark", "auto"],
+            "default": "auto"
+          },
+          "notifications": {
+            "$ref": "#/components/schemas/NotificationPreferences"
+          },
+          "currency": {
+            "type": "string",
+            "default": "USD",
+            "example": "USD"
+          },
+          "date_format": {
+            "type": "string",
+            "enum": ["MM/DD/YYYY", "DD/MM/YYYY", "YYYY-MM-DD"],
+            "default": "MM/DD/YYYY"
+          }
+        }
+      },
+      "NotificationPreferences": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "boolean",
+            "default": true
+          },
+          "push": {
+            "type": "boolean",
+            "default": true
+          },
+          "sms": {
+            "type": "boolean",
+            "default": false
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["immediate", "daily", "weekly"],
+            "default": "daily"
+          }
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "persona": {
+            "$ref": "#/components/schemas/PersonaType"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/UserPreferences"
+          }
+        },
+        "required": ["email", "name", "persona"]
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "persona": {
+            "$ref": "#/components/schemas/PersonaType"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/UserPreferences"
+          }
+        }
+      },
+      "LinkTokenRequest": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "User ID for Plaid Link"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["transactions", "accounts", "identity"]
+            },
+            "default": ["transactions", "accounts"]
+          },
+          "country_codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": ["US"]
+          }
+        },
+        "required": ["user_id"]
+      },
+      "LinkTokenResponse": {
+        "type": "object",
+        "properties": {
+          "link_token": {
+            "type": "string",
+            "description": "Plaid Link token"
+          },
+          "expiration": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Token expiration time"
+          }
+        },
+        "required": ["link_token", "expiration"]
+      },
+      "ExchangeTokenRequest": {
+        "type": "object",
+        "properties": {
+          "public_token": {
+            "type": "string",
+            "description": "Plaid public token from Link"
+          }
+        },
+        "required": ["public_token"]
+      },
+      "ExchangeTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Internal access token ID"
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Account"
+            }
+          }
+        },
+        "required": ["access_token_id", "accounts"]
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "plaid_account_id": {
+            "type": "string",
+            "description": "Plaid account identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Account name from financial institution"
+          },
+          "official_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Official account name from financial institution"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["depository", "credit", "loan", "investment", "other"]
+          },
+          "subtype": {
+            "type": "string",
+            "description": "Account subtype (checking, savings, credit card, etc.)"
+          },
+          "balance": {
+            "$ref": "#/components/schemas/AccountBalance"
+          },
+          "mask": {
+            "type": "string",
+            "description": "Last 4 digits of account number"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "plaid_account_id", "name", "type", "subtype", "balance", "created_at", "updated_at"]
+      },
+      "AccountBalance": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true,
+            "description": "Available balance"
+          },
+          "current": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Current balance"
+          },
+          "limit": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true,
+            "description": "Credit limit for credit accounts"
+          },
+          "iso_currency_code": {
+            "type": "string",
+            "default": "USD"
+          }
+        },
+        "required": ["current", "iso_currency_code"]
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "plaid_transaction_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Plaid transaction ID (null for manual entries)"
+          },
+          "account_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Transaction amount (positive for debits/expenses)"
+          },
+          "iso_currency_code": {
+            "type": "string",
+            "default": "USD"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Transaction date"
+          },
+          "authorized_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Transaction description/merchant name"
+          },
+          "merchant_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "plaid_category": {
+            "type": "string",
+            "description": "Primary Plaid category (groceries, health, etc.)",
+            "example": "groceries"
+          },
+          "plaid_category_detailed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Detailed Plaid category hierarchy"
+          },
+          "app_expense_type": {
+            "$ref": "#/components/schemas/ExpenseType"
+          },
+          "is_split": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether transaction is split across multiple categories"
+          },
+          "split_details": {
+            "$ref": "#/components/schemas/SplitDetails"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "is_tithing_income": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this transaction counts as tithing-eligible income"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "account_id", "amount", "date", "name", "plaid_category", "created_at", "updated_at"]
+      },
+      "ExpenseType": {
+        "type": "string",
+        "enum": ["fixed", "discretionary", "split"],
+        "description": "Biblical stewardship expense classification: fixed (needs) vs discretionary (wants)"
+      },
+      "SplitDetails": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "fixed_categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SplitCategory"
+            }
+          },
+          "discretionary_categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SplitCategory"
+            }
+          }
+        }
+      },
+      "SplitCategory": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Plaid category for this split"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0.01,
+            "description": "Amount allocated to this category"
+          }
+        },
+        "required": ["category", "amount"]
+      },
+      "TransactionList": {
+        "type": "object",
+        "properties": {
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          },
+          "total_count": {
+            "type": "integer",
+            "description": "Total number of transactions matching filters"
+          },
+          "has_more": {
+            "type": "boolean",
+            "description": "Whether there are more transactions available"
+          }
+        },
+        "required": ["transactions", "total_count", "has_more"]
+      },
+      "CreateTransactionRequest": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0.01
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "plaid_category": {
+            "type": "string"
+          },
+          "app_expense_type": {
+            "$ref": "#/components/schemas/ExpenseType"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "is_tithing_income": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": ["account_id", "amount", "date", "name", "plaid_category", "app_expense_type"]
+      },
+      "UpdateTransactionRequest": {
+        "type": "object",
+        "properties": {
+          "plaid_category": {
+            "type": "string"
+          },
+          "app_expense_type": {
+            "$ref": "#/components/schemas/ExpenseType"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "is_tithing_income": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SplitTransactionRequest": {
+        "type": "object",
+        "properties": {
+          "fixed_categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SplitCategory"
+            }
+          },
+          "discretionary_categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SplitCategory"
+            }
+          }
+        },
+        "required": ["fixed_categories", "discretionary_categories"]
+      },
+      "Budget": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string",
+            "enum": ["monthly", "weekly", "semester"],
+            "default": "monthly"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetCategory"
+            }
+          },
+          "total_budget": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Total budget amount across all categories"
+          },
+          "total_spent": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Total amount spent against this budget"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "name", "period", "start_date", "end_date", "categories", "created_at", "updated_at"]
+      },
+      "BudgetCategory": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Plaid category name"
+          },
+          "expense_type": {
+            "$ref": "#/components/schemas/ExpenseType"
+          },
+          "budgeted_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0
+          },
+          "spent_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0,
+            "default": 0
+          },
+          "remaining_amount": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Calculated: budgeted_amount - spent_amount"
+          }
+        },
+        "required": ["category", "expense_type", "budgeted_amount"]
+      },
+      "CreateBudgetRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "period": {
+            "type": "string",
+            "enum": ["monthly", "weekly", "semester"],
+            "default": "monthly"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateBudgetCategory"
+            },
+            "minItems": 1
+          }
+        },
+        "required": ["name", "start_date", "end_date", "categories"]
+      },
+      "CreateBudgetCategory": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "expense_type": {
+            "$ref": "#/components/schemas/ExpenseType"
+          },
+          "budgeted_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0
+          }
+        },
+        "required": ["category", "expense_type", "budgeted_amount"]
+      },
+      "UpdateBudgetRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateBudgetCategory"
+            }
+          }
+        }
+      },
+      "SavingsGoal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Goal name (typically 'Emergency Fund')"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "target_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0.01
+          },
+          "current_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0,
+            "default": 0
+          },
+          "target_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "progress_percentage": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Calculated: (current_amount / target_amount) * 100"
+          },
+          "is_completed": {
+            "type": "boolean",
+            "default": false
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "name", "target_amount", "current_amount", "progress_percentage", "created_at", "updated_at"]
+      },
+      "CreateSavingsGoalRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "target_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0.01
+          },
+          "target_date": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": ["name", "target_amount"]
+      },
+      "UpdateSavingsGoalRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "target_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0.01
+          },
+          "current_amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0
+          },
+          "target_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "TithingSummary": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "total_income": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Total tithing-eligible income for the year"
+          },
+          "total_tithe_due": {
+            "type": "number",
+            "format": "decimal",
+            "description": "10% of total income"
+          },
+          "total_tithe_paid": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Total tithing payments made"
+          },
+          "balance": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Difference between due and paid (negative if behind)"
+          },
+          "current_percentage": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Actual percentage given (paid/income * 100)"
+          },
+          "recent_payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TithingPayment"
+            },
+            "description": "Recent tithing payments"
+          }
+        },
+        "required": ["year", "total_income", "total_tithe_due", "total_tithe_paid", "balance", "current_percentage"]
+      },
+      "TithingPayment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0.01
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["cash", "check", "online", "auto_transfer", "other"]
+          },
+          "recipient": {
+            "type": "string",
+            "description": "Church or organization name"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "amount", "date", "method", "recipient", "created_at"]
+      },
+      "CreateTithingRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0.01
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["cash", "check", "online", "auto_transfer", "other"]
+          },
+          "recipient": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": ["amount", "date", "method", "recipient"]
+      },
+      "Family": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "administrator_id": {
+            "type": "string",
+            "description": "User ID of family administrator"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FamilyMember"
+            }
+          },
+          "settings": {
+            "$ref": "#/components/schemas/FamilySettings"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "name", "administrator_id", "members", "created_at", "updated_at"]
+      },
+      "FamilyMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "Auth0 user ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "$ref": "#/components/schemas/FamilyRole"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/FamilyPermissions"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "invited", "suspended"],
+            "default": "active"
+          },
+          "joined_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "user_id", "name", "email", "role", "permissions", "status", "joined_at"]
+      },
+      "FamilyPermissions": {
+        "type": "object",
+        "properties": {
+          "can_view_accounts": {
+            "type": "boolean",
+            "default": true
+          },
+          "can_view_transactions": {
+            "type": "boolean",
+            "default": true
+          },
+          "can_manage_budget": {
+            "type": "boolean",
+            "default": false
+          },
+          "can_approve_spending": {
+            "type": "boolean",
+            "default": false
+          },
+          "requires_approval_over": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true,
+            "description": "Amount requiring approval (null for no limit)"
+          },
+          "can_invite_members": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "FamilySettings": {
+        "type": "object",
+        "properties": {
+          "joint_tithing": {
+            "type": "boolean",
+            "default": true,
+            "description": "Calculate tithing on combined family income"
+          },
+          "shared_emergency_fund": {
+            "type": "boolean",
+            "default": true,
+            "description": "Family shares emergency fund goal"
+          },
+          "notification_coordination": {
+            "type": "boolean",
+            "default": true,
+            "description": "Coordinate notifications to prevent duplicates"
+          }
+        }
+      },
+      "CreateFamilyRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "settings": {
+            "$ref": "#/components/schemas/FamilySettings"
+          }
+        },
+        "required": ["name"]
+      },
+      "UpdateFamilyRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "settings": {
+            "$ref": "#/components/schemas/FamilySettings"
+          }
+        }
+      },
+      "FamilyInvitationRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "$ref": "#/components/schemas/FamilyRole"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/FamilyPermissions"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Optional personal message with invitation"
+          }
+        },
+        "required": ["email", "role"]
+      },
+      "FamilyInvitation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "family_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inviter_id": {
+            "type": "string",
+            "description": "User ID who sent the invitation"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "$ref": "#/components/schemas/FamilyRole"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/FamilyPermissions"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "accepted", "expired", "cancelled"],
+            "default": "pending"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "family_id", "inviter_id", "email", "role", "permissions", "status", "expires_at", "created_at"]
+      },
+      "UpdatePermissionsRequest": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "$ref": "#/components/schemas/FamilyPermissions"
+          }
+        },
+        "required": ["permissions"]
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "stripe_subscription_id": {
+            "type": "string",
+            "description": "Stripe subscription ID"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/SubscriptionPlan"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "cancelled", "past_due", "unpaid", "trialing"]
+          },
+          "current_period_start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "current_period_end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "trial_end": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_at_period_end": {
+            "type": "boolean",
+            "default": false
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "stripe_subscription_id", "plan", "status", "current_period_start", "current_period_end", "created_at"]
+      },
+      "SubscriptionPlan": {
+        "type": "string",
+        "enum": ["free", "premium_individual", "premium_family"],
+        "description": "Available subscription plans"
+      },
+      "CreateSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/SubscriptionPlan"
+          },
+          "payment_method_id": {
+            "type": "string",
+            "description": "Stripe payment method ID"
+          },
+          "trial_days": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30,
+            "default": 14
+          }
+        },
+        "required": ["plan", "payment_method_id"]
+      },
+      "UpdateSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/SubscriptionPlan"
+          },
+          "payment_method_id": {
+            "type": "string",
+            "description": "New Stripe payment method ID"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "System",
+      "description": "System health and status endpoints"
+    },
+    {
+      "name": "Authentication",
+      "description": "User authentication and profile management"
+    },
+    {
+      "name": "Users",
+      "description": "User management and profiles"
+    },
+    {
+      "name": "Plaid Integration",
+      "description": "Plaid bank account connection and management"
+    },
+    {
+      "name": "Accounts",
+      "description": "Financial account management"
+    },
+    {
+      "name": "Transactions",
+      "description": "Transaction management with dual categorization"
+    },
+    {
+      "name": "Budgets",
+      "description": "Budget creation and tracking"
+    },
+    {
+      "name": "Goals",
+      "description": "Savings goals (primarily emergency fund)"
+    },
+    {
+      "name": "Tithing",
+      "description": "Tithing calculation and tracking"
+    },
+    {
+      "name": "Family Management",
+      "description": "Family plan coordination and member management"
+    },
+    {
+      "name": "Subscriptions",
+      "description": "Subscription plan management"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /auth/
+Allow: /
+
+Sitemap: https://faithfulfinances.com/sitemap.xml
