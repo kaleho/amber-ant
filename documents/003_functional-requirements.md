@@ -292,17 +292,27 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 **So that** we can collaborate on our family's financial stewardship.
 
 **Acceptance Criteria:**
-- Email-based invitation system with secure tokens
-- Role-based invitation templates (spouse, teen, pre-teen)
-- Invitation acceptance and account linking workflow
-- Permission management based on family roles
-- Invitation revocation and member removal
+- Application-generated email invitations with secure tokens
+- Role-based invitation templates (spouse, teen, pre-teen, extended family)
+- Invitation acceptance workflow linking to existing or new Auth0 accounts
+- Token-based security with expiration and single-use validation
+- Invitation status tracking and management
 
-**Family Roles:**
-- **Administrator:** Full access and family management
-- **Spouse:** Joint financial access and collaboration
-- **Teen:** Supervised access with parental approval
-- **Pre-Teen:** Basic tracking with full parental oversight
+**Invitation Workflow:**
+1. **Family Administrator** creates invitation with specified role
+2. **System generates** secure invitation token and email template
+3. **Email sent** to recipient with role-specific invitation message
+4. **Recipient clicks** secure invitation link
+5. **System validates** token and redirects to Auth0 login/registration
+6. **Upon authentication**, system links Auth0 user to family with assigned role
+7. **Family membership** established in application database
+
+**Invitation Management:**
+- View pending, accepted, and expired invitations
+- Resend invitations with new tokens
+- Revoke pending invitations
+- Remove family members and revoke access
+- Audit trail of all invitation activities
 
 #### FR-017: Subscription Management
 **As a** paid plan subscriber,  
@@ -331,40 +341,84 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - PCI DSS compliance through Stripe's secure payment processing
 - Multi-currency support for international users
 
-#### FR-018: Authentication and Authorization
+#### FR-018: Authentication
 **As a** user,  
-**I want** secure authentication and role-based access control,  
-**So that** my financial data is protected and I have appropriate access based on my role.
+**I want** secure authentication,  
+**So that** my financial data is protected with industry-standard security.
 
 **Acceptance Criteria:**
-- Auth0 integration for authentication and authorization
-- Social login options (Google, Apple, Facebook)
-- Multi-factor authentication (MFA) support
-- Role-based access control (RBAC) for family plans
-- Single sign-on (SSO) across platform components
-- Account linking for family member invitations
+- Auth0 integration for authentication (free plan features only)
+- Social login options (Google, Apple, Facebook - limited connections)
+- Multi-factor authentication (MFA) support via Auth0
+- User registration and login management
+- Password reset and recovery functionality
+- Basic user profile management
 
-**Auth0 Integration Features:**
+**Auth0 Free Plan Features:**
 - Universal Login for consistent user experience
-- Passwordless authentication options (email magic links, SMS)
-- User profile management with custom attributes
-- Progressive profiling for plan-specific data collection
-- Account linking for family member management
-- Secure token management (JWT) with refresh token rotation
-
-**Role-Based Access Control:**
-- **Administrator:** Full family financial data and management access
-- **Spouse:** Joint account access with collaborative permissions
-- **Teen:** Limited access with parental approval workflows
-- **Pre-Teen:** Supervised access with full parental control
-- **Extended Family:** Read-only access to designated financial data
+- Database connections for username/password authentication
+- Social connections (limited number on free plan)
+- Basic MFA support (TOTP, SMS where available)
+- User Management API for basic operations
+- JWT token issuance with basic user claims
+- Password policy enforcement
 
 **Security Features:**
-- Breach password detection and forced password resets
-- Anomaly detection for unusual login patterns
-- Geo-location based access controls
-- Device fingerprinting and trusted device management
-- Account recovery with multiple verification methods
+- Breach password detection via Auth0
+- Basic anomaly detection for unusual login patterns
+- Secure password storage and hashing
+- Account lockout protection
+- Email verification for new accounts
+
+#### FR-019: Application-Level Family Management
+**As a** family plan subscriber,  
+**I want** to manage my family members and their permissions within the application,  
+**So that** we can collaborate on our financial stewardship with appropriate access controls.
+
+**Acceptance Criteria:**
+- Family membership management within application database
+- Role-based permission system implemented in application logic
+- Family member invitation via application-generated emails
+- User role assignment and management interface
+- Family hierarchy and relationship tracking
+- Permission inheritance and override capabilities
+
+**Family Management Features:**
+- **Family Creation:** Establish family units with primary administrator
+- **Member Invitation:** Send email invitations with secure tokens
+- **Role Assignment:** Assign and modify family member roles
+- **Permission Management:** Granular control over financial data access
+- **Member Removal:** Remove family members and revoke access
+- **Family Settings:** Configure family-wide preferences and policies
+
+**Application-Managed Roles:**
+- **Administrator:** Full family financial management and member control
+  - Invite/remove family members
+  - Assign/modify roles and permissions
+  - Access all family financial data
+  - Manage subscription and billing
+- **Spouse:** Joint financial management with collaborative access
+  - View and edit joint financial data
+  - Invite children to family (with admin approval)
+  - Shared budgeting and goal management
+- **Teen (15-17):** Supervised financial tracking with parental oversight
+  - Personal financial tracking with parental visibility
+  - Request spending approvals
+  - Limited account linking with parental consent
+- **Pre-Teen (8-14):** Basic tracking with full parental supervision
+  - Manual entry only with parental approval
+  - Parent-supervised savings goals
+  - All transactions require parental confirmation
+- **Extended Family:** Read-only access for transparency and accountability
+  - View family financial health indicators
+  - No editing or transaction capabilities
+
+**Database Schema Requirements:**
+- User accounts linked to Auth0 user IDs
+- Family membership tables with role assignments
+- Permission matrices for feature access control
+- Invitation tokens and expiration management
+- Audit trails for role changes and family modifications
 
 ## 3. Business Rules
 

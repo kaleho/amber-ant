@@ -103,10 +103,10 @@ All requirements follow SMART criteria (Specific, Measurable, Achievable, Releva
 - **Device Fingerprinting:** Trusted device management
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Parental-managed Auth0 sub-account with full oversight
-- **Teen:** Auth0 account with parental approval rules and restrictions
+- **Pre-Teen:** Auth0 account with application-managed parental oversight
+- **Teen:** Auth0 account with application-level parental approval workflows
 - **Fixed-Income:** Auth0 alternative authentication (email links, SMS)
-- **Family Plans:** Auth0 organization structure for role management
+- **Family Plans:** Application-managed role structure with Auth0 authentication
 
 ### 3.2 Compliance Requirements
 

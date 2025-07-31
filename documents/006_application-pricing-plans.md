@@ -335,25 +335,26 @@ Start learning: [SECURE LINK]
 - **Tax Calculation:** Automatic tax calculation and invoice generation
 - **Multi-Currency:** Support for international users with local currency billing
 
-#### Auth0 Integration Specifications
+#### Auth0 Integration Specifications (Free Plan Features)
 - **Universal Login:** Consistent authentication experience across all platforms
-- **Social Connections:** Google, Apple, Facebook integration for simplified signup
-- **Passwordless Authentication:** Email magic links and SMS options
-- **Multi-Factor Authentication:** TOTP, SMS, and email-based MFA
-- **Organizations:** Family grouping with role-based permissions
-- **User Management API:** Programmatic user creation and role assignment
-- **Custom Claims:** Subscription plan and family role information in JWT tokens
+- **Database Connections:** Username/password authentication with secure storage
+- **Social Connections:** Limited social login options (Google, Apple, Facebook)
+- **Basic MFA:** TOTP and SMS-based multi-factor authentication where available
+- **User Management API:** Basic user operations and profile management
+- **Rules/Actions:** Custom authentication logic (limited on free plan)
+- **JWT Tokens:** Basic user claims with custom attributes for subscription status
 
 ### 8.2 Security Considerations
 - **Payment Security:** All payment processing handled by Stripe (PCI DSS Level 1 compliant)
-- **Authentication Security:** Auth0 Universal Login with MFA and anomaly detection
-- **Family Data Isolation:** Secure separation using Auth0 Organizations and application-level controls
-- **Role-Based Access Control:** Auth0 RBAC with custom rules for family permissions
-- **Invitation Security:** Secure token-based invitation links with Auth0 account linking
-- **Age Verification:** COPPA compliance for children under 13 via Auth0 age gates
-- **Data Privacy:** Individual privacy within family sharing context using Auth0 consent management
-- **Session Security:** JWT tokens with refresh token rotation and secure storage
-- **API Security:** Rate limiting, CORS policies, and API key management
+- **Authentication Security:** Auth0 Universal Login with basic MFA and security features
+- **Family Data Isolation:** Secure separation using application-level database controls and permissions
+- **Role-Based Access Control:** Application-managed RBAC with database-stored permissions
+- **Invitation Security:** Secure token-based invitation links with application-managed account linking
+- **Age Verification:** COPPA compliance for children under 13 via application age verification
+- **Data Privacy:** Individual privacy within family sharing context using application consent management
+- **Session Security:** JWT tokens with basic refresh handling and secure storage
+- **API Security:** Rate limiting, CORS policies, API key management, and application-level authorization
+- **Database Security:** Encrypted data at rest, secure family membership isolation, audit logging
 
 ## 9. Success Metrics
 
