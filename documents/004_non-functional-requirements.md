@@ -312,6 +312,62 @@ All requirements follow SMART criteria (Specific, Measurable, Achievable, Releva
 - **Data Validation:** Input validation for all external data
 - **Security Scanning:** Regular security assessment of integrations
 
+### 8.2 Database Architecture Requirements
+
+#### NFR-024: Turso Global/Account Database Architecture
+**Requirement:** Application must use a dual-database architecture with complete data isolation for financial information.
+
+**Acceptance Criteria:**
+- **Global Database (Single Instance):** Manages business operations, payment processing, subscription management, Auth0 integration, account metadata, and support access grants
+- **Account Database (Per Account/Plan):** Contains ALL financial data, Plaid connections, family roles, and automation settings with complete isolation
+- **No Cross-Database Queries:** Strict prohibition on queries between Account databases to maintain complete data isolation
+- **Database Provisioning:** Automated creation and lifecycle management of Account databases
+- **Metadata Management:** Complete tracking of Account database size, users, membership, and Turso-specific location data in Global database
+
+**Global Database Responsibilities:**
+- User authentication mapping to Account databases
+- Stripe subscription and billing management
+- Support role access grants with time-bound controls
+- Account database metadata and monitoring
+- Administrator reset token management
+- Business analytics and operational metrics
+- Cross-account operational data (no financial data)
+
+**Account Database Responsibilities:**
+- All financial transactions and categorization
+- Plaid account connections and transaction data
+- Budget creation, monitoring, and historical data
+- Savings goals and progress tracking
+- Tithing calculations and payment logs
+- Family membership and role assignments within account
+- Agent automation settings and activity logs
+- User financial history and personalized reports
+
+#### NFR-025: Complete Data Isolation and Security
+**Requirement:** Financial data must be completely isolated between accounts with no possibility of cross-account data access.
+
+**Acceptance Criteria:**
+- **Account Database Isolation:** Each account's financial data resides in separate Turso database instances
+- **No Shared Financial Data:** Zero financial information stored in Global database
+- **Access Control:** Account database access restricted to authenticated users of that specific account
+- **Administrator Reset Security:** Secure token-based reset mechanism without exposing financial data
+- **Support Role Security:** Time-bound access to specific Account database only when explicitly granted
+- **Database Size Management:** Automatic monitoring and data management to maintain optimal performance
+
+**Security Implementation:**
+- **Database-Level Isolation:** Physical separation of financial data through separate database instances
+- **Authentication Boundary:** Auth0 user mapping to specific Account database through Global database
+- **Role-Based Database Access:** Support and Agent roles controlled through secure token exchange
+- **Audit Trail Separation:** Support activities logged in Global database, financial activities in Account database
+- **Data Residency Control:** Complete control over financial data location and access patterns
+
+**Performance Requirements:**
+- **Database Provisioning Time:** ≤30 seconds for new Account database creation
+- **Cross-Database Communication:** Secure token-based communication only, no direct queries
+- **Global Database Response:** ≤100ms for authentication and metadata operations
+- **Account Database Response:** ≤200ms for financial data operations
+- **Database Size Monitoring:** Real-time monitoring with alerts at 800MB to prevent overage charges
+
 ## 9. Compliance Matrix
 
 | Requirement Category | Pre-Teen | Teen | College | Single Adult | Married Couple | Single Parent | Two Parent | Fixed-Income |

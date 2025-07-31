@@ -412,13 +412,107 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 - **Extended Family:** Read-only access for transparency and accountability
   - View family financial health indicators
   - No editing or transaction capabilities
+- **Support:** Time-bound technical support access (disabled by default)
+  - Administrator-granted temporary access with specified duration (hours)
+  - Full Account database access equivalent to Administrator when active
+  - All activities logged in Global database audit trail
+  - Automatic access revocation after time limit expires
+  - Cannot modify Administrator permissions or billing information
+- **Agent:** Automated process control role (Administrator controlled)
+  - Controls all automated processes within Account database
+  - Handles transaction categorization, notifications, calculations
+  - Administrator can enable/disable with impact warnings
+  - When disabled: all automation stops, Administrator performs manually
+  - Activity logging within Account database
 
 **Database Schema Requirements:**
-- User accounts linked to Auth0 user IDs
+
+**Global Database Schema:**
+- User accounts linked to Auth0 user IDs with Account database mapping
+- Account database metadata (size, users, Turso location)
+- Support role access grants with time-bound controls
+- Stripe subscription and billing management
+- Administrator reset tokens and audit trails
+- Cross-account operational data (no financial information)
+
+**Account Database Schema (Per Account/Plan):**
 - Family membership tables with role assignments
 - Permission matrices for feature access control
-- Invitation tokens and expiration management
+- All financial data (transactions, budgets, goals, tithing)
+- Plaid account connections and transaction data
+- Agent automation settings and activity logs
+- User financial history and personalized reports
+- Invitation tokens and expiration management (family-specific)
 - Audit trails for role changes and family modifications
+
+#### FR-020: Support Role Management
+**As an** Administrator,  
+**I want** to grant time-bound technical support access to my account,  
+**So that** support staff can help resolve issues while maintaining security and control.
+
+**Acceptance Criteria:**
+- Administrator can grant Support role access for specified duration (1-48 hours)
+- Support access request and approval workflow with clear impact disclosure
+- Support role gains temporary Administrator-level access to Account database only
+- All Support activities logged in Global database with detailed audit trail
+- Automatic access revocation after specified time limit expires
+- Support role cannot modify Administrator permissions or billing information
+- Administrator can revoke Support access at any time before expiration
+- Clear notification system for when Support access is granted, active, and revoked
+
+**Support Access Workflow:**
+1. **Support Request:** Technical support requests account access with justification
+2. **Administrator Notification:** Administrator receives access request with impact details
+3. **Access Grant:** Administrator approves with specific time duration (1-48 hours)
+4. **Token Generation:** Secure access token created in Global database
+5. **Support Access:** Support staff gains temporary Account database access
+6. **Activity Logging:** All Support actions logged with timestamps and details
+7. **Automatic Revocation:** Access automatically revoked after time limit
+8. **Access Audit:** Complete audit trail available to Administrator
+
+**Security Requirements:**
+- Support access tokens stored securely in Global database
+- No permanent Support access - all grants are time-bound
+- Complete activity logging for compliance and transparency
+- Administrator maintains ultimate control over Support access
+- Support role cannot invite new users or modify critical account settings
+
+#### FR-021: Agent Role Management
+**As an** Administrator,  
+**I want** to control automated processes in my account,  
+**So that** I can choose between automation and manual control based on my preferences.
+
+**Acceptance Criteria:**
+- Administrator can enable/disable Agent role with clear impact warnings
+- Agent role controls ALL automated processes within Account database
+- When enabled: automatic transaction categorization, notifications, calculations, alerts
+- When disabled: Administrator must perform all operations manually
+- Clear impact disclosure when disabling Agent role (loss of automation features)
+- Agent activity logging within Account database for transparency
+- Default Agent role setting (enabled) with opt-out capability
+- Granular automation control for specific features (future enhancement placeholder)
+
+**Automated Processes Controlled by Agent Role:**
+- **Transaction Categorization:** Automatic categorization of Plaid transaction data
+- **Tithing Calculations:** Automated 10% gross income calculations from deposits
+- **Budget Monitoring:** Automatic spending alerts and overspending notifications
+- **Savings Progress:** Automated goal progress tracking and milestone notifications
+- **Payment Reminders:** Automatic tithing and bill payment reminders
+- **Data Synchronization:** Automated Plaid data refresh and account balance updates
+- **Report Generation:** Automated monthly and annual financial report creation
+
+**Impact Warning System:**
+- Clear explanation of features that will stop working when Agent role is disabled
+- List of manual tasks Administrator must perform when automation is disabled
+- Option to re-enable Agent role at any time
+- Confirmation dialog for disabling Agent role with impact checklist
+- Help documentation for manual processes when automation is disabled
+
+**Manual Fallback Requirements:**
+- All automated processes must have manual Administrator alternatives
+- Clear instructions for manual execution of each automated process
+- User interface adaptations when Agent role is disabled (manual action buttons)
+- Data integrity maintained whether using automated or manual processes
 
 ## 3. Business Rules
 
@@ -449,12 +543,23 @@ Family plan administrators have ultimate authority over family member access, pe
 ### BR-009: Plan-Based Feature Limits
 Feature access and usage limits must be enforced based on subscription plan with clear upgrade paths for users approaching limits.
 
+### BR-010: Database Isolation Mandatory
+All financial data must be completely isolated in separate Account databases with no cross-database queries to ensure complete privacy and security between accounts.
+
+### BR-011: Support Access Time-Bound and Audited
+Support role access must always be time-bound (1-48 hours), require Administrator approval, and maintain complete audit trails in the Global database.
+
+### BR-012: Agent Role Controls Automation Features
+The Agent role must control ALL automated processes within an account, and when disabled, all automation must stop with clear manual alternatives provided to the Administrator.
+
 ## 4. Constraints and Assumptions
 
 ### 4.1 Technical Constraints
 - Plaid API integration required for automated transaction data
 - Stripe API integration required for all payment processing and subscription management
 - Auth0 integration required for authentication, authorization, and user management
+- Turso database architecture required for Global and Account database separation
+- Complete database isolation - no cross-database queries permitted
 - Mobile-first design approach
 - Progressive Web App (PWA) implementation
 - Browser compatibility: Chrome, Safari, Firefox, Edge

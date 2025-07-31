@@ -35,10 +35,10 @@ This document outlines the Minimum Viable Product (MVP) features for a financial
 - **Rationale**: Simplifies financial oversight, encouraging regular use and aligning with the document’s emphasis on knowing one’s financial state (page 24).
 
 ### 6. Secure Data Management and Privacy Controls
-- **Description**: Robust security measures to protect user financial data, with options to manage or revoke account connections.
-- **Implementation**: Use Plaid’s AES-256 encryption and TLS, with multi-factor authentication. Include Plaid Portal for users to manage or revoke account connections, ensuring GDPR/CCPA compliance.
-- **MVP Scope**: Focus on basic security (encryption, authentication) and Plaid Portal integration.
-- **Rationale**: Builds user trust, essential for handling sensitive Plaid data, supporting responsible stewardship (inferred from best practices).
+- **Description**: Robust security measures to protect user financial data with complete account isolation, support role management, and automation controls.
+- **Implementation**: Turso database architecture with Global database for operations and separate Account database per plan for complete financial data isolation. Auth0 authentication with application-level role management including time-bound Support role and Administrator-controlled Agent role. Use Plaid's AES-256 encryption and TLS with multi-factor authentication.
+- **MVP Scope**: Focus on database isolation, basic security (encryption, authentication), Support/Agent role management, and Plaid Portal integration.
+- **Rationale**: Builds user trust through complete data isolation, provides flexible support and automation options, essential for handling sensitive financial data while supporting responsible stewardship across all personas.
 
 ### 7. Goal-Based Notifications
 - **Description**: Push notifications to alert users about financial goal progress (e.g., savings targets, budget adherence) to maintain engagement.

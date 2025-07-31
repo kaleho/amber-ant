@@ -105,7 +105,8 @@ Following biblical principles of generosity and accessibility, the application p
 
 ### 3.1 Single Adult Plan
 **Cost:** $4.99/month or $49.99/year  
-**Target:** Single Adult persona (25-40 years)
+**Target:** Single Adult persona (25-40 years)  
+**Database Storage:** Included up to 1GB; additional $1/GB for large accounts (uncommon)
 
 #### Premium Features:
 - ✅ **Unlimited Plaid Integration:** Connect unlimited bank accounts and credit cards
@@ -125,7 +126,8 @@ Following biblical principles of generosity and accessibility, the application p
 
 ### 3.2 Married Couple Plan
 **Cost:** $7.99/month or $79.99/year  
-**Target:** Married Couple persona
+**Target:** Married Couple persona  
+**Database Storage:** Included up to 1GB; additional $1/GB for large accounts (uncommon)
 
 #### Shared Features:
 - ✅ **All Single Plan Features** for both spouses
@@ -143,7 +145,8 @@ Following biblical principles of generosity and accessibility, the application p
 
 ### 3.3 Family Plan
 **Cost:** $9.99/month or $99.99/year  
-**Target:** Two Parent Family, Single Parent Family personas
+**Target:** Two Parent Family, Single Parent Family personas  
+**Database Storage:** Included up to 1GB; additional $1/GB for large accounts (uncommon)
 
 #### Complete Family Features:
 - ✅ **All Married Couple Features**
@@ -224,6 +227,22 @@ Following biblical principles of generosity and accessibility, the application p
 - No editing or modification permissions
 - Limited reporting access
 - Support family accountability and transparency
+
+#### Support Role (Technical Support)
+- Time-bound access (1-48 hours) granted by Administrator
+- Full Account database access equivalent to Administrator when active
+- Disabled by default - requires explicit Administrator approval
+- Cannot modify Administrator permissions or billing information
+- All activities logged with complete audit trail
+- Automatic access revocation after specified time limit
+
+#### Agent Role (Automation Control)
+- Controls all automated processes within the account
+- Handles transaction categorization, notifications, calculations
+- Enabled by default with Administrator override capability
+- When disabled: all automation stops, manual operations required
+- Clear impact warnings provided when disabling automation
+- Activity logging for transparency and troubleshooting
 
 ### 5.3 Invitation Email Templates
 
@@ -319,12 +338,13 @@ Start learning: [SECURE LINK]
 ## 8. Implementation Requirements
 
 ### 8.1 Technical Requirements
+- **Database Architecture:** Turso Global database for operations and Account database per plan for complete data isolation
 - **Subscription Management:** Stripe API for all payment processing and subscription lifecycle
-- **Authentication System:** Auth0 for authentication, authorization, and user management
-- **User Role Management:** Auth0 RBAC for family plan permissions and access control
-- **Email Invitation System:** Secure token-based invitations with Auth0 account linking
+- **Authentication System:** Auth0 for authentication with application-level authorization and family management
+- **User Role Management:** Application-managed roles including Support and Agent roles with database access control
+- **Email Invitation System:** Application-generated secure token-based invitations with Auth0 account linking
 - **Plan Feature Toggles:** Dynamic feature enablement based on Stripe subscription status
-- **Usage Monitoring:** Track plan limits with Stripe metered billing and upgrade prompts
+- **Usage Monitoring:** Track plan limits, database size monitoring, and upgrade prompts for storage overages
 
 #### Stripe Integration Specifications
 - **Subscription Products:** Pre-configured products for Single, Couple, and Family plans
