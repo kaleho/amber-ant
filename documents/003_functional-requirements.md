@@ -310,17 +310,61 @@ All requirements are grounded in biblical principles of stewardship, with tithin
 **So that** I can control my account and payments.
 
 **Acceptance Criteria:**
-- Subscription signup and payment processing
-- Plan upgrade and downgrade functionality
-- Billing history and invoice access
-- Payment method management
-- Subscription cancellation with data retention
+- Stripe-based subscription signup and payment processing
+- Plan upgrade and downgrade functionality via Stripe portal
+- Billing history and invoice access through Stripe integration
+- Payment method management (cards, bank accounts, digital wallets)
+- Subscription cancellation with configurable data retention
+- Webhook handling for subscription state changes
 
-**Plan Management Features:**
-- Monthly and annual billing options
-- Automatic plan transitions for age-based changes
-- Family member addition and removal
-- Usage monitoring and plan optimization recommendations
+**Stripe Integration Features:**
+- Monthly and annual billing cycles with Stripe subscriptions
+- Automatic plan transitions with proration handling
+- Failed payment retry logic and dunning management
+- Tax calculation and invoice generation
+- Customer portal for self-service billing management
+- Usage-based billing alerts and plan optimization recommendations
+
+**Technical Requirements:**
+- Stripe API integration for subscription lifecycle management
+- Secure webhook endpoint for real-time subscription updates
+- PCI DSS compliance through Stripe's secure payment processing
+- Multi-currency support for international users
+
+#### FR-018: Authentication and Authorization
+**As a** user,  
+**I want** secure authentication and role-based access control,  
+**So that** my financial data is protected and I have appropriate access based on my role.
+
+**Acceptance Criteria:**
+- Auth0 integration for authentication and authorization
+- Social login options (Google, Apple, Facebook)
+- Multi-factor authentication (MFA) support
+- Role-based access control (RBAC) for family plans
+- Single sign-on (SSO) across platform components
+- Account linking for family member invitations
+
+**Auth0 Integration Features:**
+- Universal Login for consistent user experience
+- Passwordless authentication options (email magic links, SMS)
+- User profile management with custom attributes
+- Progressive profiling for plan-specific data collection
+- Account linking for family member management
+- Secure token management (JWT) with refresh token rotation
+
+**Role-Based Access Control:**
+- **Administrator:** Full family financial data and management access
+- **Spouse:** Joint account access with collaborative permissions
+- **Teen:** Limited access with parental approval workflows
+- **Pre-Teen:** Supervised access with full parental control
+- **Extended Family:** Read-only access to designated financial data
+
+**Security Features:**
+- Breach password detection and forced password resets
+- Anomaly detection for unusual login patterns
+- Geo-location based access controls
+- Device fingerprinting and trusted device management
+- Account recovery with multiple verification methods
 
 ## 3. Business Rules
 
@@ -355,6 +399,8 @@ Feature access and usage limits must be enforced based on subscription plan with
 
 ### 4.1 Technical Constraints
 - Plaid API integration required for automated transaction data
+- Stripe API integration required for all payment processing and subscription management
+- Auth0 integration required for authentication, authorization, and user management
 - Mobile-first design approach
 - Progressive Web App (PWA) implementation
 - Browser compatibility: Chrome, Safari, Firefox, Edge

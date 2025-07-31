@@ -84,31 +84,49 @@ All requirements follow SMART criteria (Specific, Measurable, Achievable, Releva
 - **Key Management:** Hardware Security Module (HSM) integration
 
 #### NFR-006: Authentication Security
-**Requirement:** User authentication must provide appropriate security levels for financial data.
+**Requirement:** User authentication must provide appropriate security levels for financial data using Auth0 integration.
 
 **Acceptance Criteria:**
-- **Multi-Factor Authentication:** Required for all users
-- **Biometric Authentication:** Available on supported devices
-- **Session Management:** Adaptive timeout based on risk profile
-- **Password Requirements:** NIST-compliant password policies
+- **Auth0 Universal Login:** Centralized authentication with consistent UX
+- **Multi-Factor Authentication:** Required for all users via Auth0 MFA
+- **Social Login Integration:** Google, Apple, Facebook through Auth0
+- **Passwordless Options:** Email magic links and SMS via Auth0
+- **Role-Based Access Control:** Auth0 RBAC for family plan permissions
+- **Session Management:** JWT tokens with refresh token rotation
+- **Account Linking:** Secure family member invitation and linking
+
+**Auth0 Security Features:**
+- **Anomaly Detection:** Unusual login pattern identification
+- **Breach Password Detection:** Automatic password reset for compromised passwords
+- **Bot Detection:** Automated attack prevention
+- **Geo-velocity Checks:** Location-based access controls
+- **Device Fingerprinting:** Trusted device management
 
 **Persona-Specific Requirements:**
-- **Pre-Teen:** Full parental control and oversight; no independent authentication
-- **Teen:** Parental approval for account access
-- **Fixed-Income:** Alternative authentication methods (voice, SMS)
-- **Married Couple:** Shared access with individual authentication
+- **Pre-Teen:** Parental-managed Auth0 sub-account with full oversight
+- **Teen:** Auth0 account with parental approval rules and restrictions
+- **Fixed-Income:** Auth0 alternative authentication (email links, SMS)
+- **Family Plans:** Auth0 organization structure for role management
 
 ### 3.2 Compliance Requirements
 
 #### NFR-007: Regulatory Compliance
-**Requirement:** Application must comply with relevant financial and privacy regulations.
+**Requirement:** Application must comply with relevant financial and privacy regulations through third-party integrations.
 
 **Acceptance Criteria:**
-- **PCI DSS Level 1:** Full compliance for payment card data
-- **GDPR:** European privacy regulation compliance
+- **PCI DSS Compliance:** Achieved through Stripe's PCI DSS Level 1 certification
+- **Payment Security:** All payment data handled exclusively by Stripe
+- **GDPR:** European privacy regulation compliance via Auth0 and application controls
 - **CCPA:** California privacy regulation compliance
-- **GLBA:** Gramm-Leach-Bliley Act compliance
+- **GLBA:** Gramm-Leach-Bliley Act compliance for financial data
 - **SOX:** Sarbanes-Oxley Act compliance where applicable
+- **COPPA:** Children's privacy compliance for users under 13
+
+**Third-Party Compliance Benefits:**
+- **Stripe PCI DSS:** No direct payment card data storage or processing
+- **Auth0 SOC 2:** Identity security and availability controls
+- **Auth0 GDPR:** Privacy controls and data processing agreements
+- **Reduced Compliance Scope:** Leveraging certified service providers
 
 #### NFR-008: Faith-Based Trust Standards
 **Requirement:** Application must meet enhanced trust expectations of faith-based communities.

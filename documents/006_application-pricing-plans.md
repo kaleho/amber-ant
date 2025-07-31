@@ -319,18 +319,41 @@ Start learning: [SECURE LINK]
 ## 8. Implementation Requirements
 
 ### 8.1 Technical Requirements
-- **Subscription Management:** Stripe or similar payment processing
-- **User Role Management:** Flexible permission system
-- **Email Invitation System:** Secure invitation and onboarding flow
-- **Plan Feature Toggles:** Dynamic feature enablement based on plan
-- **Usage Monitoring:** Track plan limits and upgrade prompts
+- **Subscription Management:** Stripe API for all payment processing and subscription lifecycle
+- **Authentication System:** Auth0 for authentication, authorization, and user management
+- **User Role Management:** Auth0 RBAC for family plan permissions and access control
+- **Email Invitation System:** Secure token-based invitations with Auth0 account linking
+- **Plan Feature Toggles:** Dynamic feature enablement based on Stripe subscription status
+- **Usage Monitoring:** Track plan limits with Stripe metered billing and upgrade prompts
+
+#### Stripe Integration Specifications
+- **Subscription Products:** Pre-configured products for Single, Couple, and Family plans
+- **Pricing Models:** Monthly and annual billing with automatic proration
+- **Payment Methods:** Credit cards, debit cards, ACH, digital wallets (Apple Pay, Google Pay)
+- **Customer Portal:** Self-service billing management through Stripe Customer Portal
+- **Webhooks:** Real-time subscription status updates and failed payment handling
+- **Tax Calculation:** Automatic tax calculation and invoice generation
+- **Multi-Currency:** Support for international users with local currency billing
+
+#### Auth0 Integration Specifications
+- **Universal Login:** Consistent authentication experience across all platforms
+- **Social Connections:** Google, Apple, Facebook integration for simplified signup
+- **Passwordless Authentication:** Email magic links and SMS options
+- **Multi-Factor Authentication:** TOTP, SMS, and email-based MFA
+- **Organizations:** Family grouping with role-based permissions
+- **User Management API:** Programmatic user creation and role assignment
+- **Custom Claims:** Subscription plan and family role information in JWT tokens
 
 ### 8.2 Security Considerations
-- **Family Data Isolation:** Secure separation of family financial data
-- **Role-Based Access Control:** Granular permissions per family member
-- **Invitation Security:** Secure token-based invitation links
-- **Age Verification:** COPPA compliance for children under 13
-- **Data Privacy:** Individual privacy within family sharing context
+- **Payment Security:** All payment processing handled by Stripe (PCI DSS Level 1 compliant)
+- **Authentication Security:** Auth0 Universal Login with MFA and anomaly detection
+- **Family Data Isolation:** Secure separation using Auth0 Organizations and application-level controls
+- **Role-Based Access Control:** Auth0 RBAC with custom rules for family permissions
+- **Invitation Security:** Secure token-based invitation links with Auth0 account linking
+- **Age Verification:** COPPA compliance for children under 13 via Auth0 age gates
+- **Data Privacy:** Individual privacy within family sharing context using Auth0 consent management
+- **Session Security:** JWT tokens with refresh token rotation and secure storage
+- **API Security:** Rate limiting, CORS policies, and API key management
 
 ## 9. Success Metrics
 

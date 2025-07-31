@@ -103,11 +103,13 @@ This document provides complete traceability between MVP features, user personas
 | FR-015: Plan-Based Feature Access | NFR-016, NFR-021 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | FR-016: Family Invitation System | NFR-006, NFR-011 | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✗ |
 | FR-017: Subscription Management | NFR-005, NFR-007 | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✗ |
+| FR-018: Authentication and Authorization | NFR-006, NFR-007 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-**Plan-Based Feature Trace:**
+**Technical Integration Trace:**
+- **Auth0 Authentication:** Universal login and RBAC (FR-018) → Authentication Security (NFR-006)
+- **Stripe Payments:** Subscription and billing management (FR-017) → Regulatory Compliance (NFR-007)
 - **Free Plans:** Core features with usage limits (FR-015) → Scalability (NFR-016)
 - **Family Plans:** Email invitations and role management (FR-016) → Authentication (NFR-006)
-- **Paid Plans:** Subscription and billing management (FR-017) → Security (NFR-005)
 
 ## 3. Non-Functional Requirements Cross-Reference
 
@@ -141,14 +143,14 @@ This document provides complete traceability between MVP features, user personas
 
 | Persona | Functional Reqs | Non-Functional Reqs | Special Considerations | Coverage Score |
 |---------|----------------|-------------------|----------------------|----------------|
-| **Pre-Teen (8-14)** | 16/17 (94%) | 23/23 (100%) | Parent-child collaboration, parental control, manual entry only, FREE plan | ✅ Complete |
-| **Teen (15-17)** | 16/17 (94%) | 23/23 (100%) | Parental consent, education, gamification, FREE plan | ✅ Complete |
-| **College Student (18-22)** | 16/17 (94%) | 23/23 (100%) | Variable income, mobile-first, data costs, FREE plan | ✅ Complete |
-| **Single Adult (25-40)** | 17/17 (100%) | 23/23 (100%) | Professional interface, multi-platform, PAID plan ($4.99/mo) | ✅ Complete |
-| **Married Couple (25-65)** | 17/17 (100%) | 23/23 (100%) | Joint access, synchronization, collaboration, PAID plan ($7.99/mo) | ✅ Complete |
-| **Single Parent (25-45)** | 17/17 (100%) | 23/23 (100%) | Time efficiency, priority alerts, PAID family plan ($9.99/mo) | ✅ Complete |
-| **Two Parent Family (30-50)** | 17/17 (100%) | 23/23 (100%) | Family sharing, child categories, PAID family plan ($9.99/mo) | ✅ Complete |
-| **Fixed-Income (55+)** | 16/17 (94%) | 23/23 (100%) | Accessibility, large fonts, simplified interface, FREE plan | ✅ Complete |
+| **Pre-Teen (8-14)** | 17/18 (94%) | 23/23 (100%) | Parent-child collaboration, Auth0 parental control, manual entry, FREE plan | ✅ Complete |
+| **Teen (15-17)** | 17/18 (94%) | 23/23 (100%) | Parental consent, Auth0 restricted access, gamification, FREE plan | ✅ Complete |
+| **College Student (18-22)** | 17/18 (94%) | 23/23 (100%) | Variable income, Auth0 social login, mobile-first, FREE plan | ✅ Complete |
+| **Single Adult (25-40)** | 18/18 (100%) | 23/23 (100%) | Professional interface, Stripe billing, Auth0 MFA, PAID ($4.99/mo) | ✅ Complete |
+| **Married Couple (25-65)** | 18/18 (100%) | 23/23 (100%) | Joint access, Stripe couples plan, Auth0 RBAC, PAID ($7.99/mo) | ✅ Complete |
+| **Single Parent (25-45)** | 18/18 (100%) | 23/23 (100%) | Time efficiency, Stripe family plan, Auth0 family roles, PAID ($9.99/mo) | ✅ Complete |
+| **Two Parent Family (30-50)** | 18/18 (100%) | 23/23 (100%) | Family sharing, Stripe family plan, Auth0 organizations, PAID ($9.99/mo) | ✅ Complete |
+| **Fixed-Income (55+)** | 17/18 (94%) | 23/23 (100%) | Accessibility, Auth0 passwordless, simplified interface, FREE plan | ✅ Complete |
 
 ## 5. Business Rules Traceability
 
