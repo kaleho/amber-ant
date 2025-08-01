@@ -392,6 +392,7 @@ user_agreements_data/
 # ================================================================================================
 
 # Claude Flow generated files
+.claude-flow/
 .claude/settings.local.json
 .mcp.json
 claude-flow.config.json
