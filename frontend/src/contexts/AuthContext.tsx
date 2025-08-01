@@ -95,7 +95,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     } catch (error: any) {
       console.error('Error initializing user profile:', error);
-      setError(error.message || 'Failed to initialize user profile');
+      
+      // Fallback: Create a local user profile when API is unavailable
+      if (auth0User) {
+        console.log('API unavailable, creating local user profile...');
+        const fallbackUser: User = {
+          id: auth0User.sub || 'local-user',
+          email: auth0User.email!,
+          name: auth0User.name || auth0User.email!,
+          persona: 'single_adult' as PersonaType, // Default persona
+          preferences: {
+            theme: 'system',
+            language: 'en',
+            currency: 'USD',
+            notifications: {
+              email: true,
+              push: false,
+              sms: false,
+            },
+          },
+          subscription: {
+            plan: 'free',
+            status: 'active',
+            currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        setUser(fallbackUser);
+        console.log('Local user profile created:', fallbackUser);
+      } else {
+        setError(error.message || 'Failed to initialize user profile');
+      }
     } finally {
       setIsLoading(false);
     }

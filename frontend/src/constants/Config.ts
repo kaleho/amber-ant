@@ -8,7 +8,7 @@ import { PersonaType, PlaidProduct, SubscriptionPlan } from '../types';
 // ==================== API CONFIGURATION ====================
 
 export const API_CONFIG = {
-  BASE_URL: __DEV__ 
+  BASE_URL: import.meta.env.DEV 
     ? 'http://localhost:3000/api' 
     : 'https://api.faithfulfinances.com',
   
@@ -107,11 +107,11 @@ export const API_CONFIG = {
 // ==================== AUTHENTICATION CONFIGURATION ====================
 
 export const AUTH0_CONFIG = {
-  domain: __DEV__ 
+  domain: import.meta.env.DEV 
     ? 'faithful-finances-dev.us.auth0.com' 
     : 'faithful-finances.us.auth0.com',
   
-  clientId: __DEV__ 
+  clientId: import.meta.env.DEV 
     ? 'YOUR_DEV_CLIENT_ID' 
     : 'YOUR_PROD_CLIENT_ID',
   
@@ -129,9 +129,9 @@ export const AUTH0_CONFIG = {
 // ==================== PLAID CONFIGURATION ====================
 
 export const PLAID_CONFIG = {
-  environment: __DEV__ ? 'sandbox' : 'production',
+  environment: import.meta.env.DEV ? 'sandbox' : 'production',
   
-  publicKey: __DEV__ 
+  publicKey: import.meta.env.DEV 
     ? 'YOUR_SANDBOX_PUBLIC_KEY' 
     : 'YOUR_PRODUCTION_PUBLIC_KEY',
   
@@ -159,7 +159,7 @@ export const PLAID_CONFIG = {
   
   // Webhook configuration
   webhook: {
-    url: __DEV__ 
+    url: import.meta.env.DEV 
       ? 'https://dev-api.faithfulfinances.com/plaid/webhooks'
       : 'https://api.faithfulfinances.com/plaid/webhooks',
     
@@ -171,7 +171,7 @@ export const PLAID_CONFIG = {
 // ==================== STRIPE CONFIGURATION ====================
 
 export const STRIPE_CONFIG = {
-  publishableKey: __DEV__ 
+  publishableKey: import.meta.env.DEV 
     ? 'pk_test_YOUR_TEST_KEY' 
     : 'pk_live_YOUR_LIVE_KEY',
   
@@ -181,7 +181,7 @@ export const STRIPE_CONFIG = {
   // Subscription plans
   plans: {
     free_individual: {
-      priceId: __DEV__ ? 'price_test_free_individual' : 'price_prod_free_individual',
+      priceId: import.meta.env.DEV ? 'price_test_free_individual' : 'price_prod_free_individual',
       features: [
         'Basic budgeting',
         'Transaction categorization',
@@ -191,7 +191,7 @@ export const STRIPE_CONFIG = {
       ],
     },
     premium_individual: {
-      priceId: __DEV__ ? 'price_test_premium_individual' : 'price_prod_premium_individual',
+      priceId: import.meta.env.DEV ? 'price_test_premium_individual' : 'price_prod_premium_individual',
       features: [
         'Advanced budgeting',
         'Unlimited bank connections',
@@ -202,7 +202,7 @@ export const STRIPE_CONFIG = {
       ],
     },
     free_family: {
-      priceId: __DEV__ ? 'price_test_free_family' : 'price_prod_free_family',
+      priceId: import.meta.env.DEV ? 'price_test_free_family' : 'price_prod_free_family',
       features: [
         'All individual features',
         'Up to 4 family members',
@@ -212,7 +212,7 @@ export const STRIPE_CONFIG = {
       ],
     },
     premium_family: {
-      priceId: __DEV__ ? 'price_test_premium_family' : 'price_prod_premium_family',
+      priceId: import.meta.env.DEV ? 'price_test_premium_family' : 'price_prod_premium_family',
       features: [
         'All premium individual features',
         'Unlimited family members',
@@ -379,7 +379,7 @@ export const FEATURE_FLAGS = {
   // Advanced Features
   INVESTMENT_TRACKING: true,
   TAX_OPTIMIZATION: true,
-  VOICE_COMMANDS: __DEV__ ? true : false, // Beta feature
+  VOICE_COMMANDS: import.meta.env.DEV ? true : false, // Beta feature
   AI_CATEGORIZATION: true,
   
   // Persona-specific Features
@@ -393,9 +393,9 @@ export const FEATURE_FLAGS = {
   BUSINESS_FEATURES: false,
   
   // Development Features
-  DEBUG_MODE: __DEV__,
-  MOCK_DATA: __DEV__,
-  ANALYTICS_LOGGING: !__DEV__,
+  DEBUG_MODE: import.meta.env.DEV,
+  MOCK_DATA: import.meta.env.DEV,
+  ANALYTICS_LOGGING: !import.meta.env.DEV,
 };
 
 // ==================== UI CONFIGURATION ====================
@@ -519,7 +519,7 @@ export const ANALYTICS_CONFIG = {
     TRACK_USER_TIMING: true,
     TRACK_NETWORK_REQUESTS: true,
     TRACK_ERROR_RATES: true,
-    SAMPLE_RATE: __DEV__ ? 1.0 : 0.1,
+    SAMPLE_RATE: import.meta.env.DEV ? 1.0 : 0.1,
   },
   
   // Privacy settings

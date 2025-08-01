@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from 'next-themes'
 import { Auth0Provider } from '@auth0/auth0-react'
@@ -31,7 +30,7 @@ const auth0Config = {
   authorizationParams: {
     redirect_uri: window.location.origin,
     scope: 'openid profile email',
-    audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+    ...(import.meta.env.VITE_AUTH0_AUDIENCE && { audience: import.meta.env.VITE_AUTH0_AUDIENCE }),
   },
   cacheLocation: 'localstorage' as const,
   useRefreshTokens: true,
@@ -47,9 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           enableSystem
           disableTransitionOnChange
         >
-          <BrowserRouter>
             <App />
-          </BrowserRouter>
         </ThemeProvider>
       </QueryClientProvider>
     </Auth0Provider>

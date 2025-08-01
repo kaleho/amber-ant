@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { Header } from './Header';
+import { Sidebar } from './Sidebar';
 import { useAuth } from '@/contexts/AuthContext';
-import { cn } from '@/lib/utils';
 
 export const DashboardLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -11,32 +10,15 @@ export const DashboardLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+      <Header onMenuClick={() => setSidebarOpen(true)} />
+      <div className="flex">
+        <Sidebar 
+          isOpen={sidebarOpen} 
+          onClose={() => setSidebarOpen(false)}
+          userPersona={user?.persona}
         />
-      )}
-
-      {/* Sidebar */}
-      <Sidebar 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)}
-        userPersona={user?.persona}
-      />
-
-      {/* Main content */}
-      <div className={cn(
-        "transition-all duration-300 ease-in-out",
-        "lg:ml-64" // Always account for sidebar on large screens
-      )}>
-        <Header onMenuClick={() => setSidebarOpen(true)} />
-        
-        <main className="p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto max-w-7xl">
-            <Outlet />
-          </div>
+        <main className="flex-1 p-6 lg:ml-64">
+          <Outlet />
         </main>
       </div>
     </div>
