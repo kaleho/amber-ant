@@ -1,111 +1,264 @@
-"""Global database models for tenant registry."""
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, DateTime, Boolean, Text, JSON, Index
+"""Database models for tenant management."""
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Optional
+from sqlalchemy import String, Boolean, DateTime, Text, Integer, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
 
 from src.database import GlobalBase
 
 
 class TenantRegistry(GlobalBase):
-    """Global registry of all tenants."""
+    """Central registry of all tenants in the system."""
+    
     __tablename__ = "tenant_registry"
     
+    # Primary key
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    slug: Mapped[str] = mapped_column(String(100), unique=True, index=True)
-    name: Mapped[str] = mapped_column(String(255))
-    database_url: Mapped[str] = mapped_column(String(500))
-    auth_token: Mapped[str] = mapped_column(Text)  # Encrypted
-    plan: Mapped[str] = mapped_column(String(50), default="basic")
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    features: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    metadata: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    
+    # Tenant identification
+    slug: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text)
+    
+    # Database connection info
+    database_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    database_auth_token: Mapped[str] = mapped_column(String(500), nullable=False)
+    
+    # Status
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    subscription_status: Mapped[str] = mapped_column(
+        String(20), 
+        default="active", 
+        nullable=False
+    )  # active, suspended, cancelled, trial
+    subscription_tier: Mapped[str] = mapped_column(
+        String(20), 
+        default="free", 
+        nullable=False
+    )  # free, premium, enterprise
+    
+    # Ownership
+    owner_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    
+    # Resource limits (based on subscription tier)
+    max_users: Mapped[int] = mapped_column(Integer, default=5)
+    max_accounts: Mapped[int] = mapped_column(Integer, default=10)
+    max_monthly_transactions: Mapped[int] = mapped_column(Integer, default=1000)
+    
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, 
-        default=datetime.utcnow, 
-        onupdate=datetime.utcnow
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
     )
     
     # Relationships
     tenant_users: Mapped[list["TenantUser"]] = relationship(
-        "TenantUser", 
+        "TenantUser",
         back_populates="tenant",
         cascade="all, delete-orphan"
     )
     
-    # Indexes
-    __table_args__ = (
-        Index("idx_tenant_registry_slug", "slug"),
-        Index("idx_tenant_registry_active", "is_active"),
-        Index("idx_tenant_registry_plan", "plan"),
-    )
+    def __repr__(self):
+        return f"<TenantRegistry(id={self.id}, slug={self.slug}, name={self.name})>"
+    
+    @property
+    def is_premium(self) -> bool:
+        """Check if tenant has premium features."""
+        return self.subscription_tier in ["premium", "enterprise"]
+    
+    @property
+    def is_enterprise(self) -> bool:
+        """Check if tenant has enterprise features."""
+        return self.subscription_tier == "enterprise"
+    
+    def can_add_user(self, current_user_count: int) -> bool:
+        """Check if tenant can add another user."""
+        return current_user_count < self.max_users
+    
+    def can_add_account(self, current_account_count: int) -> bool:
+        """Check if tenant can add another account."""
+        return current_account_count < self.max_accounts
+    
+    def can_add_transaction(self, monthly_transaction_count: int) -> bool:
+        """Check if tenant can add another transaction this month."""
+        return monthly_transaction_count < self.max_monthly_transactions
 
 
 class TenantUser(GlobalBase):
-    """Global mapping of users to tenants (for multi-tenant users)."""
+    """Association between users and tenants with role information."""
+    
     __tablename__ = "tenant_users"
     
-    id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    auth0_id: Mapped[str] = mapped_column(String(255), index=True)
-    tenant_id: Mapped[str] = mapped_column(String(36), index=True)
-    role: Mapped[str] = mapped_column(String(50), default="user")
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    permissions: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    joined_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    last_accessed_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    # Composite primary key
+    tenant_id: Mapped[str] = mapped_column(
+        String(36), 
+        ForeignKey("tenant_registry.id", ondelete="CASCADE"),
+        primary_key=True
+    )
+    user_id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
+    
+    # Role and permissions
+    role: Mapped[str] = mapped_column(
+        String(20), 
+        default="member", 
+        nullable=False
+    )  # owner, admin, member, viewer
+    
+    # Status
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    invitation_status: Mapped[str] = mapped_column(
+        String(20), 
+        default="accepted", 
+        nullable=False
+    )  # pending, accepted, declined, expired
+    
+    # Metadata
+    invited_by: Mapped[Optional[str]] = mapped_column(String(36))
+    invitation_token: Mapped[Optional[str]] = mapped_column(String(100), unique=True)
+    invitation_expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
+    )
     
     # Relationships
-    tenant: Mapped["TenantRegistry"] = relationship("TenantRegistry", back_populates="tenant_users")
-    
-    # Indexes
-    __table_args__ = (
-        Index("idx_tenant_users_auth0_id", "auth0_id"),
-        Index("idx_tenant_users_tenant_id", "tenant_id"),
-        Index("idx_tenant_users_role", "role"),
-        Index("idx_tenant_users_active", "is_active"),
-        Index("idx_tenant_users_composite", "auth0_id", "tenant_id"),  # Composite index
+    tenant: Mapped["TenantRegistry"] = relationship(
+        "TenantRegistry",
+        back_populates="tenant_users"
     )
-
-
-class TenantApiKey(GlobalBase):
-    """API keys for tenant-specific access."""
-    __tablename__ = "tenant_api_keys"
     
+    def __repr__(self):
+        return f"<TenantUser(tenant_id={self.tenant_id}, user_id={self.user_id}, role={self.role})>"
+    
+    @property
+    def is_owner(self) -> bool:
+        """Check if user is the tenant owner."""
+        return self.role == "owner"
+    
+    @property
+    def is_admin(self) -> bool:
+        """Check if user has admin privileges."""
+        return self.role in ["owner", "admin"]
+    
+    @property
+    def can_manage_users(self) -> bool:
+        """Check if user can manage other users."""
+        return self.role in ["owner", "admin"]
+    
+    @property
+    def can_modify_settings(self) -> bool:
+        """Check if user can modify tenant settings."""
+        return self.role == "owner"
+    
+    @property
+    def can_view_finances(self) -> bool:
+        """Check if user can view financial data."""
+        return self.role in ["owner", "admin", "member"]
+    
+    @property
+    def can_edit_finances(self) -> bool:
+        """Check if user can edit financial data."""
+        return self.role in ["owner", "admin", "member"]
+    
+    def has_permission(self, permission: str) -> bool:
+        """Check if user has a specific permission."""
+        permissions = {
+            "owner": [
+                "manage_users", "modify_settings", "view_finances", 
+                "edit_finances", "delete_tenant", "manage_billing"
+            ],
+            "admin": [
+                "manage_users", "view_finances", "edit_finances", 
+                "manage_categories", "export_data"
+            ],
+            "member": [
+                "view_finances", "edit_finances", "add_transactions", 
+                "manage_own_goals"
+            ],
+            "viewer": [
+                "view_finances", "view_reports"
+            ]
+        }
+        
+        return permission in permissions.get(self.role, [])
+
+
+class TenantInvitation(GlobalBase):
+    """Pending invitations for users to join tenants."""
+    
+    __tablename__ = "tenant_invitations"
+    
+    # Primary key
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    tenant_id: Mapped[str] = mapped_column(String(36), index=True)
-    key_hash: Mapped[str] = mapped_column(String(255), unique=True, index=True)
-    name: Mapped[str] = mapped_column(String(100))
-    permissions: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    last_used_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    created_by: Mapped[str] = mapped_column(String(255))  # Auth0 user ID
     
-    # Indexes
-    __table_args__ = (
-        Index("idx_tenant_api_keys_tenant_id", "tenant_id"),
-        Index("idx_tenant_api_keys_active", "is_active"),
-        Index("idx_tenant_api_keys_expires", "expires_at"),
+    # Invitation details
+    tenant_id: Mapped[str] = mapped_column(
+        String(36), 
+        ForeignKey("tenant_registry.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
     )
-
-
-class TenantSettings(GlobalBase):
-    """Global tenant settings and configuration."""
-    __tablename__ = "tenant_settings"
+    email: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    role: Mapped[str] = mapped_column(String(20), default="member", nullable=False)
     
-    id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    tenant_id: Mapped[str] = mapped_column(String(36), unique=True, index=True)
-    settings: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    # Invitation metadata
+    invitation_token: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    invited_by: Mapped[str] = mapped_column(String(36), nullable=False)
+    message: Mapped[Optional[str]] = mapped_column(Text)
+    
+    # Status and expiration
+    status: Mapped[str] = mapped_column(
+        String(20), 
+        default="pending", 
+        nullable=False
+    )  # pending, accepted, declined, expired, cancelled
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, 
-        default=datetime.utcnow, 
-        onupdate=datetime.utcnow
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
     )
     
-    # Indexes
-    __table_args__ = (
-        Index("idx_tenant_settings_tenant_id", "tenant_id"),
-    )
+    def __repr__(self):
+        return f"<TenantInvitation(id={self.id}, email={self.email}, status={self.status})>"
+    
+    @property
+    def is_expired(self) -> bool:
+        """Check if invitation has expired."""
+        from datetime import datetime, timezone
+        return datetime.now(timezone.utc) > self.expires_at
+    
+    @property
+    def is_pending(self) -> bool:
+        """Check if invitation is still pending."""
+        return self.status == "pending" and not self.is_expired
+    
+    def expire(self):
+        """Mark invitation as expired."""
+        self.status = "expired"
+        self.updated_at = func.now()

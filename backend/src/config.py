@@ -79,11 +79,45 @@ class Settings(BaseSettings):
     PROMETHEUS_METRICS_ENABLED: bool = True
     
     # Email
-    SMTP_SERVER: str = "smtp.gmail.com"
+    SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
     SMTP_USERNAME: str
     SMTP_PASSWORD: str
     SMTP_USE_TLS: bool = True
+    SMTP_USE_SSL: bool = False
+    EMAIL_FROM_ADDRESS: str = "noreply@faithfulfinances.com"
+    EMAIL_FROM_NAME: str = "Faithful Finances"
+    
+    # Environment
+    ENVIRONMENT: str = "development"
+    
+    # Security Configuration
+    ENFORCE_HTTPS: bool = False
+    SECURITY_HEADERS_ENABLED: bool = True
+    CSP_ENABLED: bool = True
+    HSTS_MAX_AGE: int = 31536000
+    
+    # Input Validation
+    MAX_JSON_DEPTH: int = 10
+    MAX_JSON_KEYS: int = 100
+    MAX_STRING_LENGTH: int = 10000
+    
+    # Security Monitoring
+    SECURITY_MONITORING_ENABLED: bool = True
+    SECURITY_EVENT_RETENTION_DAYS: int = 90
+    SUSPICIOUS_ACTIVITY_THRESHOLD: int = 5
+    
+    # Password Security
+    PASSWORD_MIN_LENGTH: int = 8
+    PASSWORD_REQUIRE_UPPERCASE: bool = True
+    PASSWORD_REQUIRE_LOWERCASE: bool = True
+    PASSWORD_REQUIRE_NUMBERS: bool = True
+    PASSWORD_REQUIRE_SYMBOLS: bool = False
+    
+    # Session Security
+    SESSION_TIMEOUT_MINUTES: int = 480  # 8 hours
+    FAILED_LOGIN_ATTEMPTS_LIMIT: int = 5
+    ACCOUNT_LOCKOUT_DURATION_MINUTES: int = 30
     
     # File Storage
     STORAGE_PROVIDER: str = "local"
@@ -124,7 +158,89 @@ class Settings(BaseSettings):
     def plaid_country_codes_list(self) -> List[str]:
         """Parse Plaid country codes from string."""
         return [code.strip() for code in self.PLAID_COUNTRY_CODES.split(",")]
+    
+    @property
+    def is_production(self) -> bool:
+        """Check if running in production mode."""
+        return self.ENVIRONMENT == "production"
+    
+    @property
+    def is_development(self) -> bool:
+        """Check if running in development mode."""
+        return self.ENVIRONMENT == "development"
+    
+    @property
+    def is_testing(self) -> bool:
+        """Check if running in testing mode."""
+        return self.ENVIRONMENT == "testing"
+    
+    def get_security_config(self) -> dict:
+        """Get security configuration dictionary."""
+        return {
+            "enforce_https": self.ENFORCE_HTTPS,
+            "security_headers_enabled": self.SECURITY_HEADERS_ENABLED,
+            "csp_enabled": self.CSP_ENABLED,
+            "hsts_max_age": self.HSTS_MAX_AGE,
+            "max_json_depth": self.MAX_JSON_DEPTH,
+            "max_json_keys": self.MAX_JSON_KEYS,
+            "max_string_length": self.MAX_STRING_LENGTH,
+            "security_monitoring_enabled": self.SECURITY_MONITORING_ENABLED,
+            "security_event_retention_days": self.SECURITY_EVENT_RETENTION_DAYS,
+            "suspicious_activity_threshold": self.SUSPICIOUS_ACTIVITY_THRESHOLD
+        }
+    
+    def validate_security_configuration(self) -> List[str]:
+        """Validate security configuration and return warnings."""
+        warnings = []
+        
+        # Check for weak configurations in production
+        if self.is_production:
+            if not self.ENFORCE_HTTPS:
+                warnings.append("HTTPS enforcement should be enabled in production")
+            
+            if self.DEBUG:
+                warnings.append("Debug mode should be disabled in production")
+            
+            if "*" in str(self.CORS_ALLOW_ORIGINS):
+                warnings.append("CORS origins should be restricted in production")
+            
+            if len(self.SECRET_KEY) < 32:
+                warnings.append("SECRET_KEY should be at least 32 characters long")
+            
+            if len(self.ENCRYPTION_KEY) < 32:
+                warnings.append("ENCRYPTION_KEY should be at least 32 characters long")
+        
+        # Check for missing required configurations
+        if not self.SECRET_KEY:
+            warnings.append("SECRET_KEY is required")
+        
+        if not self.ENCRYPTION_KEY:
+            warnings.append("ENCRYPTION_KEY is required")
+        
+        if not self.GLOBAL_DATABASE_URL:
+            warnings.append("GLOBAL_DATABASE_URL is required")
+        
+        # Security monitoring checks
+        if not self.SECURITY_MONITORING_ENABLED:
+            warnings.append("Security monitoring should be enabled for better threat detection")
+        
+        if self.FAILED_LOGIN_ATTEMPTS_LIMIT > 10:
+            warnings.append("FAILED_LOGIN_ATTEMPTS_LIMIT is quite high, consider lowering it")
+        
+        if self.SESSION_TIMEOUT_MINUTES > 1440:  # 24 hours
+            warnings.append("SESSION_TIMEOUT_MINUTES is very long, consider shortening it")
+        
+        return warnings
 
 
 # Global settings instance
 settings = Settings()
+
+# Validate security configuration on startup
+import logging
+security_warnings = settings.validate_security_configuration()
+if security_warnings:
+    logger = logging.getLogger(__name__)
+    logger.warning("Security configuration warnings detected:")
+    for warning in security_warnings:
+        logger.warning(f"  - {warning}")

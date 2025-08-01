@@ -12,16 +12,30 @@ logger = logging.getLogger(__name__)
 
 
 def create_fernet_key() -> Fernet:
-    """Create Fernet encryption key from settings."""
-    # Ensure key is properly formatted for Fernet
-    if len(settings.ENCRYPTION_KEY) == 32:
-        # If key is 32 chars, encode it properly for Fernet
-        key = base64.urlsafe_b64encode(settings.ENCRYPTION_KEY.encode()[:32])
-    else:
-        # Use key as is if it's already base64 encoded
-        key = settings.ENCRYPTION_KEY.encode()
-    
-    return Fernet(key)
+    """Create Fernet encryption key from settings with secure key derivation."""
+    try:
+        from src.security.key_manager import key_manager
+        
+        # Use secure key derivation
+        derived_key = key_manager.derive_encryption_key(
+            password=settings.ENCRYPTION_KEY,
+            salt=b"faithful_finances_salt_v1"  # Static salt for consistency
+        )
+        
+        return key_manager.create_fernet_cipher(derived_key)
+        
+    except ImportError:
+        # Fallback to original implementation if security module unavailable
+        logger.warning("Using fallback encryption key derivation")
+        if len(settings.ENCRYPTION_KEY) == 32:
+            key = base64.urlsafe_b64encode(settings.ENCRYPTION_KEY.encode()[:32])
+        else:
+            key = settings.ENCRYPTION_KEY.encode()
+        
+        return Fernet(key)
+    except Exception as e:
+        logger.error(f"Encryption key derivation failed: {e}")
+        raise ValueError("Failed to create encryption key")
 
 
 def encrypt_token(token: str) -> str:

@@ -95,3 +95,6 @@ async def close_databases():
     await global_engine.dispose()
     await tenant_db_manager.close_all_connections()
     logger.info("🔒 Closed all database connections")
+
+
+# Create global tenant database manager instance - imported at bottom to avoid circular imports

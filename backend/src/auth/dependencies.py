@@ -3,6 +3,7 @@ from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List, Dict, Any
+from datetime import datetime
 import logging
 
 from src.database import get_global_database_session, get_tenant_database_session
@@ -32,9 +33,48 @@ async def get_current_user_claims(
     
     try:
         claims = await auth0_service.validate_jwt_token(credentials.credentials)
+        
+        # Check if token is blacklisted
+        token_jti = claims.get('jti')
+        if token_jti:
+            try:
+                from src.security.token_blacklist import token_blacklist
+                is_revoked = await token_blacklist.is_token_revoked(token_jti)
+                if is_revoked:
+                    logger.warning("Revoked token attempted for use", jti=token_jti)
+                    raise AuthenticationError("Token has been revoked")
+                
+                # Check user-level token revocation
+                user_id = claims.get('sub')
+                token_iat = claims.get('iat', 0)
+                if user_id and token_iat:
+                    is_user_revoked = await token_blacklist.is_user_token_revoked(user_id, token_iat)
+                    if is_user_revoked:
+                        logger.warning("User tokens revoked, rejecting token", user_id=user_id, iat=token_iat)
+                        raise AuthenticationError("User tokens have been revoked")
+                        
+            except ImportError:
+                pass  # Token blacklist not available
+        
+        # Log successful authentication
+        try:
+            from src.security.monitoring import log_auth_success
+            from src.shared.utils import get_client_ip
+            # Note: request context not directly available here, will be logged at higher level
+        except ImportError:
+            pass  # Security monitoring not available
+            
         return claims
     except AuthenticationError as e:
         logger.warning(f"Authentication failed: {e}")
+        
+        # Log authentication failure
+        try:
+            from src.security.monitoring import log_auth_failure
+            # Note: request context not directly available here, will be logged at higher level
+        except ImportError:
+            pass  # Security monitoring not available
+            
         raise unauthorized_exception()
     except Exception as e:
         logger.error(f"Unexpected authentication error: {e}")
@@ -131,6 +171,25 @@ def require_permissions(required_permissions: List[str]):
                 if not auth0_service.has_permission(claims, perm)
             ]
             logger.warning(f"User {claims['sub']} missing permissions: {missing_perms}")
+            
+            # Log permission denied event
+            try:
+                from src.security.monitoring import log_permission_denied
+                from src.tenant.context import get_tenant_context
+                
+                tenant_context = get_tenant_context()
+                tenant_id = tenant_context.tenant_id if tenant_context else None
+                
+                # Note: Will be enhanced with request context at middleware level
+                import asyncio
+                asyncio.create_task(log_permission_denied(
+                    user_id=claims['sub'],
+                    tenant_id=tenant_id,
+                    permission=', '.join(missing_perms)
+                ))
+            except ImportError:
+                pass  # Security monitoring not available
+            
             raise forbidden_exception(f"Missing required permissions: {', '.join(missing_perms)}")
         
         return claims

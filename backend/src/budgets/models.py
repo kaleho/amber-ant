@@ -1,263 +1,368 @@
-"""Budget models for tenant database."""
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, DateTime, Boolean, JSON, Numeric, ForeignKey, Index, Text, Date
+"""Budget management models."""
 from datetime import datetime, date
-from typing import Dict, Any, Optional, TYPE_CHECKING
+from typing import Optional
 from decimal import Decimal
+from sqlalchemy import String, Boolean, DateTime, Date, Numeric, Text, ForeignKey, Enum as SQLEnum
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
+import enum
 
 from src.database import TenantBase
 
-if TYPE_CHECKING:
-    from src.users.models import User
+
+class BudgetPeriod(str, enum.Enum):
+    """Budget period types."""
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    QUARTERLY = "quarterly"
+    YEARLY = "yearly"
+
+
+class BudgetStatus(str, enum.Enum):
+    """Budget status types."""
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    COMPLETED = "completed"
+    PAUSED = "paused"
+
+
+class AlertType(str, enum.Enum):
+    """Budget alert types."""
+    WARNING = "warning"
+    CRITICAL = "critical"
+    EXCEEDED = "exceeded"
 
 
 class Budget(TenantBase):
-    """Budget model with persona-appropriate categories."""
+    """Main budget model."""
+    
     __tablename__ = "budgets"
     
+    # Primary key
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), index=True)
     
-    # Budget basics
-    name: Mapped[str] = mapped_column(String(100), index=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    # Basic information
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text)
     
-    # Budget period
-    period: Mapped[str] = mapped_column(String(20), default="monthly", index=True)  # monthly, weekly, semester
-    start_date: Mapped[date] = mapped_column(Date, index=True)
-    end_date: Mapped[date] = mapped_column(Date, index=True)
+    # Budget amounts
+    total_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
+    spent_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0, nullable=False)
+    remaining_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
     
-    # Budget totals (computed from categories)
-    total_budget: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0)
-    total_spent: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0)
-    total_remaining: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0)
+    # Time period
+    period_type: Mapped[BudgetPeriod] = mapped_column(SQLEnum(BudgetPeriod), nullable=False)
+    start_date: Mapped[date] = mapped_column(Date, nullable=False)
+    end_date: Mapped[date] = mapped_column(Date, nullable=False)
     
-    # Budget status
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
-    is_template: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
+    # Status and settings
+    status: Mapped[BudgetStatus] = mapped_column(SQLEnum(BudgetStatus), default=BudgetStatus.ACTIVE)
+    is_recurring: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    auto_rollover: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     
-    # Auto-update settings
-    auto_rollover: Mapped[bool] = mapped_column(Boolean, default=True)
-    rollover_unused: Mapped[bool] = mapped_column(Boolean, default=True)
+    # Alert thresholds (percentages)
+    warning_threshold: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=75, nullable=False)
+    critical_threshold: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=90, nullable=False)
     
-    # Persona-specific settings
-    persona_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True, index=True)
+    # Ownership
+    user_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    created_by: Mapped[str] = mapped_column(String(36), nullable=False)
     
-    # Metadata
-    metadata: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, 
-        default=datetime.utcnow, 
-        onupdate=datetime.utcnow
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
     )
     
     # Relationships
-    user: Mapped["User"] = relationship("User", back_populates="budgets")
     categories: Mapped[list["BudgetCategory"]] = relationship(
-        "BudgetCategory", 
+        "BudgetCategory",
         back_populates="budget",
         cascade="all, delete-orphan"
     )
     alerts: Mapped[list["BudgetAlert"]] = relationship(
-        "BudgetAlert", 
-        back_populates="budget",
-        cascade="all, delete-orphan"
-    )
-    snapshots: Mapped[list["BudgetSnapshot"]] = relationship(
-        "BudgetSnapshot", 
+        "BudgetAlert",
         back_populates="budget",
         cascade="all, delete-orphan"
     )
     
-    # Indexes
-    __table_args__ = (
-        Index("idx_budgets_user_id", "user_id"),
-        Index("idx_budgets_name", "name"),
-        Index("idx_budgets_period", "period"),
-        Index("idx_budgets_start_date", "start_date"),
-        Index("idx_budgets_end_date", "end_date"),
-        Index("idx_budgets_active", "is_active"),
-        Index("idx_budgets_template", "is_template"),
-        Index("idx_budgets_persona", "persona_type"),
-        # Composite indexes
-        Index("idx_budgets_user_period", "user_id", "period"),
-        Index("idx_budgets_user_dates", "user_id", "start_date", "end_date"),
-    )
+    def __repr__(self):
+        return f"<Budget(id={self.id}, name={self.name}, total_amount={self.total_amount})>"
+    
+    @property
+    def utilization_percentage(self) -> Decimal:
+        """Calculate budget utilization as percentage."""
+        if self.total_amount == 0:
+            return Decimal(0)
+        return (self.spent_amount / self.total_amount) * 100
+    
+    @property
+    def is_over_budget(self) -> bool:
+        """Check if budget is exceeded."""
+        return self.spent_amount > self.total_amount
+    
+    @property
+    def is_warning_threshold_reached(self) -> bool:
+        """Check if warning threshold is reached."""
+        return self.utilization_percentage >= self.warning_threshold
+    
+    @property
+    def is_critical_threshold_reached(self) -> bool:
+        """Check if critical threshold is reached."""
+        return self.utilization_percentage >= self.critical_threshold
+    
+    @property
+    def days_remaining(self) -> int:
+        """Calculate days remaining in budget period."""
+        from datetime import date
+        today = date.today()
+        if today > self.end_date:
+            return 0
+        return (self.end_date - today).days
+    
+    @property
+    def is_active_period(self) -> bool:
+        """Check if budget is in active period."""
+        from datetime import date
+        today = date.today()
+        return self.start_date <= today <= self.end_date
+    
+    def update_spent_amount(self, new_spent: Decimal):
+        """Update spent amount and recalculate remaining."""
+        self.spent_amount = new_spent
+        self.remaining_amount = self.total_amount - self.spent_amount
 
 
 class BudgetCategory(TenantBase):
-    """Budget category with dual expense type classification."""
+    """Budget category allocations."""
+    
     __tablename__ = "budget_categories"
     
+    # Primary key
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    budget_id: Mapped[str] = mapped_column(String(36), ForeignKey("budgets.id"), index=True)
+    
+    # References
+    budget_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("budgets.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
+    )
     
     # Category information
-    category: Mapped[str] = mapped_column(String(100), index=True)  # Plaid category
-    custom_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    category_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    category_id: Mapped[Optional[str]] = mapped_column(String(36))  # Reference to transaction categories
     
-    # Dual expense type (Biblical stewardship)
-    expense_type: Mapped[str] = mapped_column(String(20), index=True)  # fixed, discretionary
+    # Amounts
+    allocated_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
+    spent_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0, nullable=False)
+    remaining_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
     
-    # Budget amounts
-    budgeted_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2))
-    spent_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0)
-    remaining_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0)
+    # Settings
+    is_essential: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    priority: Mapped[int] = mapped_column(default=1, nullable=False)  # 1-5, 1 being highest
     
-    # Category settings
-    rollover_from_previous: Mapped[Decimal] = mapped_column(Numeric(15, 2), default=0)
-    alert_threshold: Mapped[Optional[Decimal]] = mapped_column(Numeric(5, 2), nullable=True)  # Percentage
-    
-    # Visual and organizational
-    color: Mapped[Optional[str]] = mapped_column(String(7), nullable=True)  # Hex color
-    icon: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    sort_order: Mapped[int] = mapped_column(default=0)
-    
-    # Metadata
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, 
-        default=datetime.utcnow, 
-        onupdate=datetime.utcnow
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
     )
     
     # Relationships
     budget: Mapped["Budget"] = relationship("Budget", back_populates="categories")
     
-    # Indexes
-    __table_args__ = (
-        Index("idx_budget_categories_budget_id", "budget_id"),
-        Index("idx_budget_categories_category", "category"),
-        Index("idx_budget_categories_expense_type", "expense_type"),
-        Index("idx_budget_categories_sort_order", "sort_order"),
-        # Composite indexes
-        Index("idx_budget_categories_budget_category", "budget_id", "category"),
-        Index("idx_budget_categories_budget_expense_type", "budget_id", "expense_type"),
-    )
+    def __repr__(self):
+        return f"<BudgetCategory(id={self.id}, category_name={self.category_name}, allocated_amount={self.allocated_amount})>"
+    
+    @property
+    def utilization_percentage(self) -> Decimal:
+        """Calculate category utilization as percentage."""
+        if self.allocated_amount == 0:
+            return Decimal(0)
+        return (self.spent_amount / self.allocated_amount) * 100
+    
+    @property
+    def is_over_budget(self) -> bool:
+        """Check if category is over budget."""
+        return self.spent_amount > self.allocated_amount
+    
+    def update_spent_amount(self, new_spent: Decimal):
+        """Update spent amount and recalculate remaining."""
+        self.spent_amount = new_spent
+        self.remaining_amount = self.allocated_amount - self.spent_amount
 
 
 class BudgetAlert(TenantBase):
     """Budget alerts and notifications."""
+    
     __tablename__ = "budget_alerts"
     
+    # Primary key
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    budget_id: Mapped[str] = mapped_column(String(36), ForeignKey("budgets.id"), index=True)
-    category_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True, index=True)
     
-    # Alert configuration
-    alert_type: Mapped[str] = mapped_column(String(50), index=True)  # overspend, approaching_limit, etc.
-    name: Mapped[str] = mapped_column(String(100))
-    
-    # Alert conditions
-    threshold_type: Mapped[str] = mapped_column(String(20))  # percentage, amount
-    threshold_value: Mapped[Decimal] = mapped_column(Numeric(15, 2))
-    
-    # Alert status
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
-    last_triggered_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    trigger_count: Mapped[int] = mapped_column(default=0)
-    
-    # Notification preferences
-    notify_email: Mapped[bool] = mapped_column(Boolean, default=True)
-    notify_push: Mapped[bool] = mapped_column(Boolean, default=True)
-    notify_sms: Mapped[bool] = mapped_column(Boolean, default=False)
-    
-    # Metadata
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime, 
-        default=datetime.utcnow, 
-        onupdate=datetime.utcnow
+    # References
+    budget_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("budgets.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
     )
+    
+    # Alert information
+    alert_type: Mapped[AlertType] = mapped_column(SQLEnum(AlertType), nullable=False)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    
+    # Alert context
+    threshold_percentage: Mapped[Optional[Decimal]] = mapped_column(Numeric(5, 2))
+    amount_at_alert: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
+    category_id: Mapped[Optional[str]] = mapped_column(String(36))  # If alert is for specific category
+    
+    # Status
+    is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_dismissed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
+    read_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    dismissed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
     
     # Relationships
     budget: Mapped["Budget"] = relationship("Budget", back_populates="alerts")
     
-    # Indexes
-    __table_args__ = (
-        Index("idx_budget_alerts_budget_id", "budget_id"),
-        Index("idx_budget_alerts_category_id", "category_id"),
-        Index("idx_budget_alerts_type", "alert_type"),
-        Index("idx_budget_alerts_active", "is_active"),
-        Index("idx_budget_alerts_last_triggered", "last_triggered_at"),
-    )
-
-
-class BudgetSnapshot(TenantBase):
-    """Daily snapshots of budget progress."""
-    __tablename__ = "budget_snapshots"
+    def __repr__(self):
+        return f"<BudgetAlert(id={self.id}, alert_type={self.alert_type}, title={self.title})>"
     
-    id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    budget_id: Mapped[str] = mapped_column(String(36), ForeignKey("budgets.id"), index=True)
+    def mark_as_read(self):
+        """Mark alert as read."""
+        self.is_read = True
+        self.read_at = func.now()
     
-    # Snapshot date
-    snapshot_date: Mapped[date] = mapped_column(Date, index=True)
-    
-    # Budget totals at snapshot time
-    total_budget: Mapped[Decimal] = mapped_column(Numeric(15, 2))
-    total_spent: Mapped[Decimal] = mapped_column(Numeric(15, 2))
-    total_remaining: Mapped[Decimal] = mapped_column(Numeric(15, 2))
-    
-    # Category-level data
-    category_data: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    
-    # Metadata
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    
-    # Relationships
-    budget: Mapped["Budget"] = relationship("Budget", back_populates="snapshots")
-    
-    # Indexes
-    __table_args__ = (
-        Index("idx_budget_snapshots_budget_id", "budget_id"),
-        Index("idx_budget_snapshots_date", "snapshot_date"),
-        Index("idx_budget_snapshots_created", "created_at"),
-        # Composite indexes
-        Index("idx_budget_snapshots_budget_date", "budget_id", "snapshot_date"),
-    )
+    def dismiss(self):
+        """Dismiss the alert."""
+        self.is_dismissed = True
+        self.dismissed_at = func.now()
 
 
 class BudgetTemplate(TenantBase):
-    """Budget templates for quick budget creation."""
+    """Budget templates for recurring budgets."""
+    
     __tablename__ = "budget_templates"
     
+    # Primary key
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), index=True)
     
     # Template information
-    name: Mapped[str] = mapped_column(String(100))
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text)
     
-    # Template configuration
-    persona_types: Mapped[list[str]] = mapped_column(JSON, default=list)
-    period: Mapped[str] = mapped_column(String(20), default="monthly")
+    # Template settings
+    period_type: Mapped[BudgetPeriod] = mapped_column(SQLEnum(BudgetPeriod), nullable=False)
+    total_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
     
-    # Template data
-    template_data: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
-    
-    # Usage statistics
-    use_count: Mapped[int] = mapped_column(default=0)
-    last_used_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    # Alert settings
+    warning_threshold: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=75, nullable=False)
+    critical_threshold: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=90, nullable=False)
     
     # Template metadata
-    is_system: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    is_public: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    use_count: Mapped[int] = mapped_column(default=0, nullable=False)
+    
+    # Ownership
+    user_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    created_by: Mapped[str] = mapped_column(String(36), nullable=False)
     
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, 
-        default=datetime.utcnow, 
-        onupdate=datetime.utcnow
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
+    )
+    last_used_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    
+    # Relationships
+    template_categories: Mapped[list["BudgetTemplateCategory"]] = relationship(
+        "BudgetTemplateCategory",
+        back_populates="template",
+        cascade="all, delete-orphan"
     )
     
-    # Indexes
-    __table_args__ = (
-        Index("idx_budget_templates_user_id", "user_id"),
-        Index("idx_budget_templates_name", "name"),
-        Index("idx_budget_templates_system", "is_system"),
-        Index("idx_budget_templates_public", "is_public"),
-        Index("idx_budget_templates_use_count", "use_count"),
+    def __repr__(self):
+        return f"<BudgetTemplate(id={self.id}, name={self.name}, total_amount={self.total_amount})>"
+    
+    def increment_use_count(self):
+        """Increment template usage count."""
+        self.use_count += 1
+        self.last_used_at = func.now()
+
+
+class BudgetTemplateCategory(TenantBase):
+    """Template category allocations."""
+    
+    __tablename__ = "budget_template_categories"
+    
+    # Primary key
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    
+    # References
+    template_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("budget_templates.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
     )
+    
+    # Category information
+    category_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    category_id: Mapped[Optional[str]] = mapped_column(String(36))
+    
+    # Allocation
+    allocated_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
+    percentage_of_total: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False)
+    
+    # Settings
+    is_essential: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    priority: Mapped[int] = mapped_column(default=1, nullable=False)
+    
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
+    )
+    
+    # Relationships
+    template: Mapped["BudgetTemplate"] = relationship("BudgetTemplate", back_populates="template_categories")
+    
+    def __repr__(self):
+        return f"<BudgetTemplateCategory(id={self.id}, category_name={self.category_name}, allocated_amount={self.allocated_amount})>"

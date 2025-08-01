@@ -1,0 +1,51 @@
+# External Service Dependencies
+
+# Redis
+redis[hiredis]==5.0.1
+aioredis==2.0.1
+
+# Stripe
+stripe==7.10.0
+
+# Plaid
+plaid-python==12.0.0
+
+# Celery (Background Tasks)
+celery[redis]==5.3.4
+kombu==5.3.4
+
+# Additional dependencies for services
+httpx==0.25.2
+aiofiles==23.2.1
+python-multipart==0.0.6
+
+# Circuit breaker pattern
+pybreaker==1.0.1
+
+# Rate limiting
+slowapi==0.1.9
+limits==3.6.0
+
+# Email sending
+aiosmtplib==3.0.1
+jinja2==3.1.2
+
+# PDF generation (for reports)
+weasyprint==60.2
+reportlab==4.0.7
+
+# Data validation and serialization
+marshmallow==3.20.1
+pydantic-extra-types==2.2.0
+
+# Monitoring and observability
+prometheus-client==0.19.0
+sentry-sdk[fastapi]==1.39.1
+
+# Encryption and security
+cryptography==41.0.8
+passlib[bcrypt]==1.7.4
+
+# Datetime handling
+python-dateutil==2.8.2
+pytz==2023.3

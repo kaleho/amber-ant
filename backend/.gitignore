@@ -1,0 +1,572 @@
+# ================================================================================================
+# FAITHFUL FINANCES API - GITIGNORE
+# ================================================================================================
+# Comprehensive .gitignore for FastAPI financial application with multi-tenant architecture
+# Includes Python, security, financial services, and deployment-specific exclusions
+# ================================================================================================
+
+# ================================================================================================
+# ENVIRONMENT & CONFIGURATION FILES
+# ================================================================================================
+
+# Environment files (CRITICAL: Never commit credentials)
+.env
+.env.*
+!.env.example
+
+# Configuration files with secrets
+config.json
+config.yaml
+config.yml
+secrets.json
+secrets.yaml
+secrets.yml
+
+# Local configuration overrides
+.env.local
+.env.development.local
+.env.staging.local
+.env.production.local
+
+# ================================================================================================
+# PYTHON & VIRTUAL ENVIRONMENTS
+# ================================================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# uv (Python package manager) files
+uv.lock
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# ================================================================================================
+# DATABASES & DATA FILES
+# ================================================================================================
+
+# SQLite databases (local development)
+*.db
+*.db-journal
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite-wal
+
+# Database dumps and backups
+*.sql
+*.dump
+database_backup_*
+db_backup_*
+*.backup
+
+# Turso database local files
+*.turso
+turso_local.db*
+
+# Database migration files (keep structure, ignore data)
+migrations/versions/*.pyc
+alembic.ini.local
+
+# ================================================================================================
+# SECURITY & CRYPTOGRAPHIC FILES
+# ================================================================================================
+
+# Private keys and certificates (CRITICAL SECURITY)
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+private_key*
+public_key*
+certificate*
+ssl_cert*
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
+known_hosts
+
+# GPG keys
+*.gpg
+*.asc
+.gnupg/
+
+# JWT secrets and tokens
+jwt_secret*
+token_secret*
+*.jwt
+access_token*
+refresh_token*
+
+# API keys and credentials files
+api_keys.txt
+credentials.txt
+auth_tokens.txt
+service_account*.json
+
+# Security audit reports with sensitive data
+security_audit_detailed.json
+vulnerability_scan_results.*
+penetration_test_results.*
+
+# ================================================================================================
+# FINANCIAL SERVICES & EXTERNAL INTEGRATIONS
+# ================================================================================================
+
+# Plaid integration files
+plaid_*.json
+plaid_transactions_*
+plaid_accounts_*
+plaid_sandbox_*
+link_token_*
+
+# Stripe integration files
+stripe_*.json
+stripe_webhooks_*
+stripe_events_*
+customer_data_*
+payment_intents_*
+
+# Auth0 configuration files
+auth0_config.json
+auth0_secrets.*
+.auth0/
+
+# Financial data exports (SENSITIVE)
+transactions_export_*
+account_statements_*
+financial_reports_*
+*.csv
+*.xlsx
+*.xls
+bank_data_*
+financial_data_*
+
+# PCI DSS compliance files
+pci_audit_*
+compliance_report_*
+cardholder_data_*
+
+# ================================================================================================
+# LOGGING & MONITORING
+# ================================================================================================
+
+# Log files
+*.log
+*.log.*
+logs/
+log/
+application.log*
+error.log*
+access.log*
+security.log*
+audit.log*
+debug.log*
+
+# Sentry debug files
+.sentryclirc
+.sentry-release
+sentry_debug_*
+
+# Monitoring data
+metrics/
+monitoring/
+telemetry/
+prometheus_data/
+
+# ================================================================================================
+# FILE UPLOADS & USER CONTENT
+# ================================================================================================
+
+# Upload directories
+uploads/
+user_uploads/
+documents/
+attachments/
+media/
+static/uploads/
+
+# User profile pictures and documents
+profile_pics/
+user_documents/
+receipt_images/
+bank_statements/
+
+# Temporary upload files
+*.tmp
+*.temp
+upload_*
+temp_*
+
+# ================================================================================================
+# CACHING & SESSION DATA
+# ================================================================================================
+
+# Redis dumps
+dump.rdb
+*.rdb
+
+# Session files
+flask_session/
+sessions/
+.session/
+
+# Cache directories
+.cache/
+cache/
+.redis/
+redis_data/
+
+# Celery beat schedule
+celerybeat-schedule
+celerybeat.pid
+
+# ================================================================================================
+# DEVELOPMENT & TESTING
+# ================================================================================================
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Testing files
+.pytest_cache/
+test_*.db
+test_results/
+test_reports/
+mock_data/
+test_uploads/
+
+# Development tools
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+
+# ================================================================================================
+# DEPLOYMENT & INFRASTRUCTURE
+# ================================================================================================
+
+# Docker files (keep Dockerfile, ignore runtime files)
+.dockerignore.local
+docker-compose.override.yml
+docker-compose.local.yml
+.docker/
+
+# Kubernetes secrets
+k8s-secrets.yaml
+kube-config
+*.kubeconfig
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+terraform.tfvars.json
+
+# Ansible vault files
+vault_pass.txt
+*.vault
+ansible_secrets.yml
+
+# Deployment scripts with credentials
+deploy_prod.sh
+deploy_staging.sh
+*_deployment_config.*
+
+# Infrastructure as Code secrets
+.pulumi/
+pulumi.*.yaml
+cloudformation_params.json
+
+# ================================================================================================
+# BACKUP & RECOVERY
+# ================================================================================================
+
+# Database backups
+backup/
+backups/
+*.backup
+*.bak
+*.old
+recovery/
+
+# Application data backups
+data_backup_*
+user_data_backup_*
+tenant_backup_*
+
+# ================================================================================================
+# FINANCIAL COMPLIANCE & LEGAL
+# ================================================================================================
+
+# Audit trails (keep in secure location, not in repo)
+audit_trails/
+compliance_logs/
+financial_audit_*
+sox_compliance_*
+regulatory_reports/
+
+# Legal documents with sensitive info
+legal_documents/
+contracts/
+agreements/
+user_agreements_data/
+
+# ================================================================================================
+# CLAUDE FLOW & AI DEVELOPMENT TOOLS
+# ================================================================================================
+
+# Claude Flow generated files
+.claude/settings.local.json
+.mcp.json
+claude-flow.config.json
+.swarm/
+.hive-mind/
+memory/claude-flow-data.json
+memory/sessions/*
+!memory/sessions/README.md
+memory/agents/*
+!memory/agents/README.md
+coordination/memory_bank/*
+coordination/subtasks/*
+coordination/orchestration/*
+claude-flow
+claude-flow.bat
+claude-flow.ps1
+hive-mind-prompt-*.txt
+
+# AI model files and training data
+*.model
+*.pkl
+*.joblib
+training_data/
+model_checkpoints/
+
+# ================================================================================================
+# OPERATING SYSTEM FILES
+# ================================================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ================================================================================================
+# PERFORMANCE & PROFILING
+# ================================================================================================
+
+# Performance profiling
+*.prof
+profile_results/
+performance_logs/
+benchmark_results/
+
+# Memory dumps
+*.hprof
+heapdump*
+core.*
+
+# ================================================================================================
+# TEMPORARY & SYSTEM FILES
+# ================================================================================================
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+*~
+.#*
+#*#
+
+# System files
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+# Package manager files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ================================================================================================
+# CUSTOM APPLICATION FILES
+# ================================================================================================
+
+# Custom tenant data (example patterns - adjust as needed)
+tenant_data/
+tenant_*/
+custom_configs/
+
+# Feature flags and experiments
+feature_flags.json
+experiments/
+ab_tests/
+
+# Third-party integrations data
+integrations/
+webhooks_data/
+api_responses/
+
+# ================================================================================================
+# SENSITIVE DEVELOPMENT DATA
+# ================================================================================================
+
+# Development databases with real data
+dev_with_prod_data.db
+staging_data_copy.*
+prod_data_snapshot.*
+
+# Development scripts with hardcoded secrets
+*_with_secrets.*
+local_dev_script.*
+quick_test_*
+
+# Personal notes with sensitive info
+TODO_SENSITIVE.md
+NOTES_PRIVATE.md
+personal_notes/
+
+# ================================================================================================
+# GITIGNORE MAINTENANCE NOTES
+# ================================================================================================
+#
+# IMPORTANT REMINDERS:
+# 
+# 1. SECURITY FIRST: Never commit:
+#    - Environment files (.env*)
+#    - API keys, tokens, or credentials
+#    - Private keys or certificates
+#    - User data or financial information
+#    - Database files with real data
+#
+# 2. COMPLIANCE: For financial applications:
+#    - Exclude all PII and financial data
+#    - Exclude audit trails and compliance reports
+#    - Exclude any files that could contain cardholder data
+#
+# 3. REGULAR REVIEW:
+#    - Review this .gitignore monthly
+#    - Add new patterns as the application evolves
+#    - Ensure team members understand security implications
+#
+# 4. EMERGENCY PROCEDURES:
+#    - If sensitive data is accidentally committed, contact security team immediately
+#    - Use git-filter-branch or BFG Repo-Cleaner to remove from history
+#    - Rotate any exposed credentials immediately
+#
+# 5. TEAM COORDINATION:
+#    - Keep .env.example updated with new required variables
+#    - Document any new exclusion patterns in team communications
+#    - Ensure CI/CD systems have appropriate environment configurations
+#
+# ================================================================================================
